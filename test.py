@@ -1,3 +1,3 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
-print "Hello, Python!"
+print("Hello, Python!")
