@@ -2,7 +2,7 @@
 import socket
 
 serversocket = socket.socket(
-        socket.AF_INET, socket.SOCK_STREAM)
+    socket.AF_INET, socket.SOCK_STREAM)
 
 host = socket.gethostname()
 
@@ -20,4 +20,3 @@ while True:
     msg = 'Thank you for connectiong' + "\r\n"
     clientsocket.send(msg.encode('ascii'))
     clientsocket.close()
-

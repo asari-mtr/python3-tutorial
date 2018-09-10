@@ -14,4 +14,4 @@ msg = s.recv(1024)
 
 s.close()
 
-print (msg.decode('ascii'))
+print(msg.decode('ascii'))

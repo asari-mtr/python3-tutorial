@@ -4,14 +4,14 @@ import re
 
 line = "Cats are smater than dogs"
 
-matchObj = re.match ( r'dogs', line, re.M | re.I )
+matchObj = re.match(r'dogs', line, re.M | re.I)
 if matchObj:
-    print ("match --> matchObj.group() : ", matchObj.group())
+    print("match --> matchObj.group() : ", matchObj.group())
 else:
-    print ("No match!!")
+    print("No match!!")
 
-searchObj = re.search( r'dogs', line, re.M | re.I )
+searchObj = re.search(r'dogs', line, re.M | re.I)
 if searchObj:
-    print ("search --> searchObj.group() : ", searchObj.group())
+    print("search --> searchObj.group() : ", searchObj.group())
 else:
-    print ("Nothing found!!")
+    print("Nothing found!!")
