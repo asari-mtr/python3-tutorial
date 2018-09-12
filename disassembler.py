@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import dis;
+import dis
 
 def sum():
     vara = 10
