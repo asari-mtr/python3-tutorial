@@ -11,7 +11,10 @@ parser.add_argument('-l', action='store_true', default=False, help='Show detail 
 args = parser.parse_args()
 
 def to_perm(mode):
-    return mode
+    d = "-"
+    if(S_ISDIR(mode)):
+        d = "d"
+    return f"{d}{mode}"
 
 file_list = glob.glob("*")
 if (args.l):
@@ -21,7 +24,7 @@ if (args.l):
         gid = os.stat(f)[ST_GID]
         size = os.stat(f)[ST_SIZE]
         ctime = os.stat(f)[ST_CTIME]
-        print(f"{mode:o} {uid} {gid} {size} {ctime} {f}")
+        print(f"{mode} {uid} {gid} {size} {ctime} {f}")
 else:
     for f in file_list:
         print(f)
