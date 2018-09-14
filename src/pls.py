@@ -6,6 +6,7 @@ import os
 from stat import *
 import pwd
 import grp
+import datetime
 
 parser = argparse.ArgumentParser(description='Show file list')
 parser.add_argument('-l', action='store_true', default=False, help='Show detail files list')
@@ -37,8 +38,8 @@ if (args.l):
         uid = pwd.getpwuid(stat[ST_UID])
         gid = grp.getgrgid(stat[ST_GID])
         size = stat[ST_SIZE]
-        ctime = stat[ST_CTIME]
-        print(f"{mode} {uid.pw_name} {gid.gr_name} {size} {ctime} {f}")
+        mtime = datetime.datetime.fromtimestamp(stat[ST_MTIME]).strftime("%m %d %H:%M")
+        print(f"{mode}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {f}")
 else:
     for f in file_list:
         print(f)
