@@ -32,12 +32,13 @@ def perm(i):
 
 file_list = glob.glob("*")
 if (args.l):
+    width_size = max(map(lambda f: len(str(os.stat(f)[ST_SIZE])), file_list))
     for f in sorted(file_list):
         mode = to_perm(os.stat(f)[ST_MODE])
         stat = os.stat(f)
         uid = pwd.getpwuid(stat[ST_UID])
         gid = grp.getgrgid(stat[ST_GID])
-        size = stat[ST_SIZE]
+        size = f"%{width_size}d" % stat[ST_SIZE]
         mtime = datetime.datetime.fromtimestamp(stat[ST_MTIME]).strftime("%m %d %H:%M")
         print(f"{mode}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {f}")
 else:
