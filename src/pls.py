@@ -34,13 +34,14 @@ file_list = glob.glob("*")
 if (args.l):
     width_size = max(map(lambda f: len(str(os.stat(f)[ST_SIZE])), file_list))
     for f in sorted(file_list):
-        mode = to_perm(os.stat(f)[ST_MODE])
         stat = os.stat(f)
-        uid = pwd.getpwuid(stat[ST_UID])
-        gid = grp.getgrgid(stat[ST_GID])
-        size = f"%{width_size}d" % stat[ST_SIZE]
-        mtime = datetime.datetime.fromtimestamp(stat[ST_MTIME]).strftime("%m %d %H:%M")
-        print(f"{mode}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {f}")
+        mode = to_perm(stat.st_mode)
+        nlink = stat.st_nlink
+        uid = pwd.getpwuid(stat.st_uid)
+        gid = grp.getgrgid(stat.st_gid)
+        size = f"%{width_size}d" % stat.st_size
+        mtime = datetime.datetime.fromtimestamp(stat.st_mtime).strftime("%m %d %H:%M")
+        print(f"{mode} {nlink}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {f}")
 else:
     for f in file_list:
         print(f)
