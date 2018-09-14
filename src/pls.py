@@ -4,6 +4,8 @@ import argparse
 import glob
 import os
 from stat import *
+import pwd
+import grp
 
 parser = argparse.ArgumentParser(description='Show file list')
 parser.add_argument('-l', action='store_true', default=False, help='Show detail files list')
@@ -20,11 +22,12 @@ file_list = glob.glob("*")
 if (args.l):
     for f in file_list:
         mode = to_perm(os.stat(f)[ST_MODE])
-        uid = os.stat(f)[ST_UID]
-        gid = os.stat(f)[ST_GID]
-        size = os.stat(f)[ST_SIZE]
-        ctime = os.stat(f)[ST_CTIME]
-        print(f"{mode} {uid} {gid} {size} {ctime} {f}")
+        stat = os.stat(f)
+        uid = pwd.getpwuid(stat[ST_UID])
+        gid = grp.getgrgid(stat[ST_GID])
+        size = stat[ST_SIZE]
+        ctime = stat[ST_CTIME]
+        print(f"{mode} {uid.pw_name} {gid.gr_name} {size} {ctime} {f}")
 else:
     for f in file_list:
         print(f)
