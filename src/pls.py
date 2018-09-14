@@ -18,6 +18,9 @@ def to_perm(mode):
     if(S_ISDIR(mode)):
         d = "d"
 
+    if(S_ISLNK(mode)):
+        d = "l"
+
     user  = perm((mode >> 6) & 0b111)
     group = perm((mode >> 3) & 0b111)
     other = perm((mode >> 0) & 0b111)
@@ -34,14 +37,15 @@ file_list = glob.glob("*")
 if (args.l):
     width_size = max(map(lambda f: len(str(os.stat(f)[ST_SIZE])), file_list))
     for f in sorted(file_list):
-        stat = os.stat(f)
+        stat = os.lstat(f)
         mode = to_perm(stat.st_mode)
         nlink = stat.st_nlink
         uid = pwd.getpwuid(stat.st_uid)
         gid = grp.getgrgid(stat.st_gid)
         size = f"%{width_size}d" % stat.st_size
         mtime = datetime.datetime.fromtimestamp(stat.st_mtime).strftime("%m %d %H:%M")
-        print(f"{mode} {nlink}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {f}")
+        name = f if not os.path.islink(f) else f"{f} -> {os.readlink(f)}"
+        print(f"{mode} {nlink}  {uid.pw_name}  {gid.gr_name}  {size} {mtime} {name}")
 else:
     for f in file_list:
         print(f)
