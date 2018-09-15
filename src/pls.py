@@ -41,10 +41,11 @@ if (not args.a):
 
 if (args.l):
     width_size = max(map(lambda f: len(str(os.stat(f)[ST_SIZE])), file_list))
+    width_nlink = max(map(lambda f: len(str(os.stat(f).st_nlink)), file_list))
     for f in sorted(file_list):
         stat = os.lstat(f)
         mode = to_perm(stat.st_mode)
-        nlink = stat.st_nlink
+        nlink = f"%{width_nlink}d" % stat.st_nlink
         uid = pwd.getpwuid(stat.st_uid)
         gid = grp.getgrgid(stat.st_gid)
         size = f"%{width_size}d" % stat.st_size
