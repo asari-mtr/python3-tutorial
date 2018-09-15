@@ -10,6 +10,7 @@ import datetime
 
 parser = argparse.ArgumentParser(description='Show file list')
 parser.add_argument('-l', action='store_true', default=False, help='Show detail files list')
+parser.add_argument('-a', action='store_true', default=False, help='Show all files list')
 
 args = parser.parse_args()
 
@@ -33,7 +34,11 @@ def perm(i):
     x = 'x' if ((i >> 0) & 1 == 1) else '-'
     return f"{r}{w}{x}"
 
-file_list = glob.glob("*")
+file_list = os.listdir()
+
+if (not args.a):
+    file_list = list(filter(lambda f: not f.startswith('.'), file_list))
+
 if (args.l):
     width_size = max(map(lambda f: len(str(os.stat(f)[ST_SIZE])), file_list))
     for f in sorted(file_list):
