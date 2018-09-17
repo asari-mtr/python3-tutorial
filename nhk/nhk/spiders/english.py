@@ -9,7 +9,7 @@ class EnglishSpider(scrapy.Spider):
 
     def parse(self, response):
         for program in response.css("div.programListBox"):
-            link = program.css('a[href*=stream]').xpath("@href").extract_first()
+            link = program.css('a[href*=stream]::attr(href)').extract_first()
             if link == None:
                 continue
 
