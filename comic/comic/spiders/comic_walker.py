@@ -5,7 +5,12 @@ import scrapy
 class ComicWalkerSpider(scrapy.Spider):
     name = 'comic-walker'
     allowed_domains = ['comic-walker.com']
-    start_urls = ['http://comic-walker.com/']
+    start_urls = ['https://comic-walker.com/contents/list/']
 
     def parse(self, response):
-        pass
+        for data in response.css("#mainContent > div > dl > dd > ul > li > a"):
+            yield {
+                    "title": data.css("h2 > span::text").extract_first(),
+                    "link": data.css("a::attr(href)").extract_first(),
+                    "image": data.css("div > img::attr(src)").extract_first(),
+            }
