@@ -67,6 +67,8 @@ DOWNLOAD_DELAY = 10
 #ITEM_PIPELINES = {
 #    'comic.pipelines.ComicPipeline': 300,
 #}
+ITEM_PIPELINES = { "scrapy.pipelines.images.ImagesPipeline": 1  }
+IMAGES_STORE = './images'
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://doc.scrapy.org/en/latest/topics/autothrottle.html
