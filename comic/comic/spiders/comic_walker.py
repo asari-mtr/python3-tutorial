@@ -14,3 +14,8 @@ class ComicWalkerSpider(scrapy.Spider):
                     "link": data.css("a::attr(href)").extract_first(),
                     "image_urls": [data.css("div > img::attr(src)").extract_first()]
             }
+
+        url = response.css(".pager_next > a::attr(href)").extract_first()
+        if url is not None:
+            next_url = response.urljoin(response.css(".pager_next > a::attr(href)").extract_first())
+            yield scrapy.Request(next_url)
