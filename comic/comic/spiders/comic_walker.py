@@ -9,11 +9,11 @@ class ComicWalkerSpider(scrapy.Spider):
 
     def parse(self, response):
         for data in response.css("#mainContent > div > dl > dd > ul > li > a"):
-            yield {
-                    "title": data.css("h2 > span::text").extract_first(),
-                    "link": data.css("a::attr(href)").extract_first(),
-                    "image_urls": [data.css("div > img::attr(src)").extract_first()]
-            }
+            item = ComicItem()
+            item["title"] = data.css("h2 > span::text").extract_first()
+            item["link"] = data.css("a::attr(href)").extract_first()
+            item["image_urls"] = [data.css("div > img::attr(src)").extract_first()]
+            yield item
 
         url = response.css(".pager_next > a::attr(href)").extract_first()
         if url is not None:
