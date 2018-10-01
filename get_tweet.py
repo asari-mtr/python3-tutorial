@@ -46,14 +46,7 @@ request_url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
 method = "GET"
 request_param = { "screen_name": user, "include_rts": "false" , "count": 200 }
 
-sig_param = {
-        'oauth_token': access_token,
-        'oauth_consumer_key': api_key,
-        'oauth_signature_method': 'HMAC-SHA1',
-        'oauth_timestamp': str(int(now.timestamp())),
-        'oauth_nonce': str(now.timestamp()),
-        'oauth_version': '1.0',
-        }
+sig_param = handler.sig_param()
 
 
 def merge_param(request_param, sig_param):
