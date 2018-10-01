@@ -14,6 +14,9 @@ import base64
 from collections import OrderedDict
 from urllib.error import URLError, HTTPError
 
+class TwHandler:
+    pass
+
 now = datetime.datetime.now()
 
 user = os.getenv('TW_USER')
