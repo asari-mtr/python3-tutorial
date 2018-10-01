@@ -15,9 +15,26 @@ from collections import OrderedDict
 from urllib.error import URLError, HTTPError
 
 class TwHandler:
-    pass
+    def __init__(self):
+        self.__api_key = os.getenv('TW_API_KEY')
+        self.__api_secret = os.getenv('TW_API_SECRET')
+        self.__access_token = os.getenv('TW_TOKEN')
+        self.__access_token_secret = os.getenv('TW_SECRET')
 
-now = datetime.datetime.now()
+
+    def sig_param(self):
+        now = datetime.datetime.now()
+        return {
+            'oauth_token': self.__access_token,
+            'oauth_consumer_key': self.__api_key,
+            'oauth_signature_method': 'HMAC-SHA1',
+            'oauth_timestamp': str(int(now.timestamp())),
+            'oauth_nonce': str(now.timestamp()),
+            'oauth_version': '1.0',
+        }
+
+
+handler = TwHandler()
 
 user = os.getenv('TW_USER')
 api_key = os.getenv('TW_API_KEY')
