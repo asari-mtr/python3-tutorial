@@ -24,14 +24,14 @@ access_token_secret = os.getenv('TW_SECRET')
 
 request_url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
 method = "GET"
-request_param = { "screen_name": user }
+request_param = { "screen_name": user, "include_rts": "false" , "count": 200 }
 
 sig_param = {
         'oauth_token': access_token,
         'oauth_consumer_key': api_key,
         'oauth_signature_method': 'HMAC-SHA1',
         'oauth_timestamp': str(int(now.timestamp())),
-        'oauth_nonce': str(int(now.timestamp())),
+        'oauth_nonce': str(now.timestamp()),
         'oauth_version': '1.0',
         }
 
@@ -51,8 +51,6 @@ def signature(method, request_url, request_query):
     encoded_request_url = urllib.parse.quote(request_url, safe="")
 
     sig_data = encoded_request_method + '&' + encoded_request_url + '&' + encoded_merged_param
-    print("sig_data: " + sig_data)
-    print()
 
     sig_key = urllib.parse.quote(api_secret) + '&' + urllib.parse.quote(access_token_secret)
 
@@ -70,7 +68,6 @@ def header_param(sig, merged_param):
 def full_request_url(request_url, request_query):
     return request_url + "?" + request_query
 
-
 merged_param = merge_param(request_param, sig_param)
 request_query = make_request_query(merged_param)
 request_query2 = make_request_query(request_param)
@@ -81,7 +78,6 @@ full_request_url = full_request_url(request_url, request_query2)
 
 import json
 req = urllib.request.Request(full_request_url, headers = {'Authorization': header_param})
-print(req.get_full_url())
 try:
     with urllib.request.urlopen(req) as res:
         body = res.read()
@@ -89,9 +85,11 @@ try:
     timeline = json.loads(body)
 
     for line in timeline:
-        print(line['user']['name'] + '::' + line['text'])
-        print(line['created_at'])
-        print('********************')
+        print(line['id_str'] + "::" + line['created_at'])
+        for entity in line['entities'].get('media', []):
+            if entity.get('type') == 'photo':
+                print(entity.get('media_url', "nothing"))
+
 except HTTPError as e:
     print('Error code: %s %s' % (e.code, e.reason))
     print(e.headers)
