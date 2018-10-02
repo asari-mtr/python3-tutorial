@@ -37,26 +37,26 @@ class TwHandler:
     def get_request(self, url, param):
         method = "GET"
         sig_param = self.__sig_param()
-        merged_param = self.merge_param(param, sig_param)
-        request_query = self.make_request_query(merged_param)
-        request_query2 = self.make_request_query(param)
-        sig = self.signature(method, url, request_query)
-        header_param = self.header_param(sig, copy.deepcopy(sig_param))
-        full_request_url = self.full_request_url(url, request_query2)
-        self.tweet(full_request_url, header_param)
+        merged_param = self.__merge_param(param, sig_param)
+        request_query = self.__make_request_query(merged_param)
+        request_query2 = self.__make_request_query(param)
+        sig = self.__signature(method, url, request_query)
+        header_param = self.__header_param(sig, copy.deepcopy(sig_param))
+        full_request_url = self.__full_request_url(url, request_query2)
+        self.__tweet(full_request_url, header_param)
 
 
-    def merge_param(self, request_param, sig_param):
+    def __merge_param(self, request_param, sig_param):
         merged_param = { **request_param, **sig_param }
 
         return OrderedDict(sorted(merged_param.items(), key = lambda x:x[0]))
 
 
-    def make_request_query(self, param):
+    def __make_request_query(self, param):
         return "&".join(["%s=%s" % (key, urllib.parse.quote(str(value), safe="")) for (key, value) in param.items()])
 
 
-    def signature(self, method, request_url, request_query):
+    def __signature(self, method, request_url, request_query):
         encoded_list = [method, request_url, request_query]
 
         sig_data = '&'.join(map(lambda p: urllib.parse.quote(p, safe=""), encoded_list))
@@ -67,18 +67,18 @@ class TwHandler:
         return  base64.urlsafe_b64encode(sha1).decode('ascii')
 
 
-    def header_param(self, sig, merged_param):
+    def __header_param(self, sig, merged_param):
         merged_param['oauth_signature'] = sig
         merged_param = OrderedDict(sorted(merged_param.items(), key = lambda x:x[0]))
         header_param = ", ".join(["%s=\"%s\"" % (key, urllib.parse.quote(str(value))) for (key, value) in merged_param.items()])
         return "OAuth " + header_param
 
 
-    def full_request_url(self, request_url, request_query):
+    def __full_request_url(self, request_url, request_query):
         return request_url + "?" + request_query
 
 
-    def tweet(self, url, param):
+    def __tweet(self, url, param):
         import json
         req = urllib.request.Request(url, headers = {'Authorization': param})
         try:
