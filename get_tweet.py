@@ -2,6 +2,7 @@
 
 import os
 import sys
+import json
 import urllib.parse
 import urllib.request
 import datetime
@@ -35,15 +36,41 @@ class TwHandler:
 
 
     def get_request(self, url, param):
-        method = "GET"
+        return self.__twitter("GET", url, param)
+
+
+    def post_request(self, url, param):
+        return self.__twitter("POST", url, param)
+
+
+    def __twitter(self, method, url, param):
         sig_param = self.__sig_param()
+
         merged_param = self.__merge_param(param, sig_param)
-        request_query = self.__make_request_query(merged_param)
-        request_query2 = self.__make_request_query(param)
-        sig = self.__signature(method, url, request_query)
+        sig = self.__signature(method, url, merged_param)
+
         header_param = self.__header_param(sig, copy.deepcopy(sig_param))
-        full_request_url = self.__full_request_url(url, request_query2)
-        self.__tweet(full_request_url, header_param)
+
+        full_request_url = self.__full_request_url(url, param)
+
+        return self.__request(full_request_url, header_param, method)
+
+    def __signature(self, method, request_url, param):
+        request_query = self.__make_request_query(param)
+
+        encoded_list = [method, request_url, request_query]
+
+        sig_data = '&'.join(map(lambda p: urllib.parse.quote(p, safe=""), encoded_list))
+        sig_key = '&'.join(map(lambda s: urllib.parse.quote(s),  [self.__api_secret, self.__access_token_secret]))
+
+        sha1 = hmac.new(bytes(sig_key, encoding='utf-8'), bytes(sig_data, encoding='utf-8'), hashlib.sha1).digest()
+
+        return base64.urlsafe_b64encode(sha1).decode('ascii')
+
+
+    def __full_request_url(self, url, param):
+        request_query = self.__make_request_query(param)
+        return url + "?" + request_query
 
 
     def __merge_param(self, request_param, sig_param):
@@ -56,17 +83,6 @@ class TwHandler:
         return "&".join(["%s=%s" % (key, urllib.parse.quote(str(value), safe="")) for (key, value) in param.items()])
 
 
-    def __signature(self, method, request_url, request_query):
-        encoded_list = [method, request_url, request_query]
-
-        sig_data = '&'.join(map(lambda p: urllib.parse.quote(p, safe=""), encoded_list))
-        sig_key = '&'.join(map(lambda s: urllib.parse.quote(s),  [self.__api_secret, self.__access_token_secret]))
-
-        sha1 = hmac.new(bytes(sig_key, encoding='utf-8'), bytes(sig_data, encoding='utf-8'), hashlib.sha1).digest()
-
-        return  base64.urlsafe_b64encode(sha1).decode('ascii')
-
-
     def __header_param(self, sig, merged_param):
         merged_param['oauth_signature'] = sig
         merged_param = OrderedDict(sorted(merged_param.items(), key = lambda x:x[0]))
@@ -74,24 +90,13 @@ class TwHandler:
         return "OAuth " + header_param
 
 
-    def __full_request_url(self, request_url, request_query):
-        return request_url + "?" + request_query
-
-
-    def __tweet(self, url, param):
-        import json
-        req = urllib.request.Request(url, headers = {'Authorization': param})
+    def __request(self, url, param, method):
+        req = urllib.request.Request(url, headers = {'Authorization': param}, method = method)
         try:
             with urllib.request.urlopen(req) as res:
                 body = res.read()
 
-            timeline = json.loads(body)
-
-            for line in timeline:
-                print(line['id_str'] + "::" + line['created_at'])
-                for entity in line['entities'].get('media', []):
-                    if entity.get('type') == 'photo':
-                        print(entity.get('media_url', "nothing"))
+            return json.loads(body)
 
         except HTTPError as e:
             print('Error code: %s %s' % (e.code, e.reason))
@@ -107,4 +112,11 @@ user = os.getenv('TW_USER')
 request_url = "https://api.twitter.com/1.1/statuses/user_timeline.json"
 request_param = { "screen_name": user, "include_rts": "false" , "count": 200 }
 
-handler.get_request(request_url, request_param)
+res = handler.get_request(request_url, request_param)
+
+for line in res:
+    print(line['id_str'] + "::" + line['created_at'])
+    for entity in line['entities'].get('media', []):
+        if entity.get('type') == 'photo':
+            print(entity.get('media_url', "nothing"))
+
