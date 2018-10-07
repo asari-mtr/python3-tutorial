@@ -18,6 +18,14 @@ def main(stdscr):
 
     stdscr.refresh()
     key =  stdscr.getkey()
-    print(key)
 
-curses.wrapper(main)
+def win(stdscr):
+    s = "Hello world"
+    win = curses.newwin(5, 20, 5, 7)
+    win.box('|', '-')
+    win.addstr(1, 5, s)
+    win.refresh()
+    win.getch()
+
+
+curses.wrapper(win)
