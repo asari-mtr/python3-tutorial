@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 
+sys.stdout.write('\33[?25l')
+
 def clear():
     print('\33[0J')
     move(2)
@@ -53,6 +55,7 @@ while True:
 
     if ch == 'q':
         print("quit")
+        sys.stdout.write('\33[?25h')
         exit(0)
     if ch == 'j':
         pos = min(pos + 1, 11)
