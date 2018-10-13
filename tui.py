@@ -17,7 +17,10 @@ post_list = [
 
 def refresh(pos=0):
     for i, v in enumerate(post_list):
-        print("\33[3{}m\33[4{}m{}\33[m".format(i % 8, (i + 2) % 8, v))
+        if pos == i:
+            print("\33[1m{}\33[m".format(v))
+        else:
+            print("\33[3{}m\33[4{}m{}\33[m".format(i % 8, (i + 2) % 8, v))
     print('\33[14F')
 
 def getchar():
@@ -36,13 +39,19 @@ clear = '\33[0J'
 print(clear)
 refresh()
 
+pos = 0
+
 while True:
     ch = getchar()
 
     if ch == 'q':
         print("quit")
         exit(0)
-    else:
-        print(clear)
-        refresh()
+    if ch == 'j':
+        pos = min(pos + 1, 11)
+    if ch == 'k':
+        pos = max(pos - 1, 0)
+
+    print(clear)
+    refresh(pos)
 
