@@ -1,4 +1,12 @@
 #!/usr/bin/env python3
+import sys
+
+def clear():
+    print('\33[0J')
+    move(2)
+
+def move(amount):
+    print('\33[%sF' % amount)
 
 post_list = [
         "January",
@@ -20,8 +28,9 @@ def refresh(pos=0):
         if pos == i:
             print("\33[1m{}\33[m".format(v))
         else:
-            print("\33[3{}m\33[4{}m{}\33[m".format(i % 8, (i + 2) % 8, v))
-    print('\33[14F')
+            #print("\33[3{}m\33[4{}m{}\33[m".format(i % 8, (i + 2) % 8, v))
+            print("{}".format(v))
+    move(len(post_list) + 1)
 
 def getchar():
     import sys, tty, termios
@@ -35,8 +44,6 @@ def getchar():
         termios.tcsetattr(fd, termios.TCSADRAIN, old)
     return ch
 
-clear = '\33[0J'
-print(clear)
 refresh()
 
 pos = 0
@@ -52,6 +59,6 @@ while True:
     if ch == 'k':
         pos = max(pos - 1, 0)
 
-    print(clear)
+    clear()
     refresh(pos)
 
