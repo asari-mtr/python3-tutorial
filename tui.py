@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 import sys
 
-sys.stdout.write('\33[?25l')
+# http://invisible-island.net/xterm/ctlseqs/ctlseqs.html
+HIDE_CURSOR = '\33[?25l'
+SHOW_CURSOR = '\33[?25h'
+
+ERASE_BELOW         = '\33[0J'
+ERASE_AVOVE         = '\33[1J'
+ERASE_ALL           = '\33[2J'
+ERASE_SAVED_LINES   = '\33[3J'
+
+sys.stdout.write(HIDE_CURSOR)
 
 def clear():
-    print('\33[0J')
+    print(ERASE_BELOW)
     move(2)
 
 def move(amount):
@@ -55,7 +64,7 @@ while True:
 
     if ch == 'q':
         print("quit")
-        sys.stdout.write('\33[?25h')
+        sys.stdout.write(SHOW_CURSOR)
         exit(0)
     if ch == 'j':
         pos = min(pos + 1, 11)
