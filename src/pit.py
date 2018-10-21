@@ -8,13 +8,12 @@ import time
 
 def update(stdscr):
     stdscr.clear()
-    stdscr.border()
 
-def make_panel(h, w, y, x, str):
+def make_panel(h, w, y, x, s):
     win = curses.newwin(h, w, y, x)
     win.clear()
     win.border()
-    win.addstr(2, 2, str)
+    win.addstr(2, 2, s)
 
     panel = curses.panel.new_panel(win)
     return win, panel
@@ -25,31 +24,41 @@ def main(stdscr):
 
     update(stdscr)
 
-    win1, panel1 = make_panel(10, 12, 5, 5, "Panel 1")
-    win2, panel2 = make_panel(10, 12, 8, 8, "Panel 2")
-    panel1.top()
+    win1, panel1 = make_panel(5, 20, 15, 15, "Panel 1")
+    win2, panel2 = make_panel(5, 20, 18, 18, "Panel 2")
+    tb = curses.textpad.Textbox(win1)
+    text = tb.edit() # terminate with ^G
+    stdscr.addstr(7, 0, text)
+
     curses.panel.update_panels()
 
     key = ''
-    x, y = 8, 8
+    current_panel = panel1
+    y, x = win1.getbegyx()
     while True:
+        current_panel.move(y, x)
+        curses.panel.update_panels()
         height, width = stdscr.getmaxyx()
         stdscr.addstr(2, 2, "hello {} {}".format(height, width))
         if not key == '':
-            stdscr.addstr(3, 2, "pressed {}".format(key))
+            stdscr.addstr(3, 2, "pressed {}({})".format(key, hex(key)))
+        stdscr.addstr(4, 2, "panel1 {}".format(win1.getbegyx()))
+        stdscr.addstr(5, 2, "panel2 {}".format(win2.getbegyx()))
 
-        panel2.move(x, y)
-        curses.panel.update_panels()
         stdscr.refresh()
         key = stdscr.getch()
         if key == 0x6a: # j
-            x += 1
-        if key == 0x6b: # k
-            x -= 1
-        if key == 0x68: # h
-            y -= 1
-        if key == 0x6c: # l
             y += 1
+        if key == 0x6b: # k
+            y = max(0, y - 1)
+        if key == 0x6c: # l
+            x += 1
+        if key == 0x68: # h
+            x = max(0, x - 1)
+        if key == 0x75: # u
+            current_panel = curses.panel.bottom_panel()
+            current_panel.top()
+            y, x = current_panel.window().getbegyx()
         if key == 0x71: # q
             break
         if key == curses.KEY_RESIZE:
