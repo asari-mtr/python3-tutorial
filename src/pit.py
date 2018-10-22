@@ -63,12 +63,15 @@ def main(stdscr):
         stdscr.refresh()
         sub.refresh()
         key = stdscr.getch()
+        h, w = current_panel.window().getmaxyx()
         if key == 0x6a: # j
-            y += 1
+            y = min(height - h - 1, y + 1)
+            # y += min(y - h, y + 1)
         if key == 0x6b: # k
             y = max(0, y - 1)
         if key == 0x6c: # l
-            x += 1
+            x = min(width - w, x + 1)
+            # x = min(x - w, x + 1)
         if key == 0x68: # h
             x = max(0, x - 1)
         if key == 0x75: # u
