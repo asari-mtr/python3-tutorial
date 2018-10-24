@@ -26,6 +26,15 @@ def init_color():
     curses.use_default_colors()
     curses.init_pair(1, 7, 23)
 
+def make_footer(stdscr):
+    height, width = stdscr.getmaxyx()
+    return stdscr.subwin(height - 1, 0)
+
+def get_window_status(stdscr):
+    height, width = stdscr.getmaxyx()
+    status = "({}, {})".format(height, width)
+    return (status, width - len(status) - 1)
+
 def main(stdscr):
     "main"
     init_color()
@@ -39,8 +48,7 @@ def main(stdscr):
     # text = tb.edit() # terminate with ^G
     # stdscr.addstr(7, 0, text)
 
-    height, width = stdscr.getmaxyx()
-    sub = stdscr.subwin(height - 1, 0)
+    footer = make_footer(stdscr)
 
     curses.panel.update_panels()
 
@@ -51,27 +59,26 @@ def main(stdscr):
         current_panel.move(y, x)
         curses.panel.update_panels()
         height, width = stdscr.getmaxyx()
-        stdscr.addstr(2, 2, "hello {} {}".format(height, width))
         if not key == '':
             stdscr.addstr(3, 2, "pressed {}({})".format(key, hex(key)))
         stdscr.addstr(4, 2, "panel1 {}".format(win1.getbegyx()))
         stdscr.addstr(5, 2, "panel2 {}".format(win2.getbegyx()))
-        sub.mvwin(height - 1, 0)
-        sub.bkgd(" ", curses.color_pair(1))
-        sub.addstr(0, 0, "Hello")
+        footer.mvwin(height - 1, 0)
+        footer.bkgd(" ", curses.color_pair(1))
+        footer.addstr(0, 0, "Hello")
+        window_status, pos = get_window_status(stdscr)
+        footer.addstr(0, pos, window_status)
 
         stdscr.refresh()
-        sub.refresh()
+        footer.refresh()
         key = stdscr.getch()
         h, w = current_panel.window().getmaxyx()
         if key == 0x6a: # j
             y = min(height - h - 1, y + 1)
-            # y += min(y - h, y + 1)
         if key == 0x6b: # k
             y = max(0, y - 1)
         if key == 0x6c: # l
             x = min(width - w, x + 1)
-            # x = min(x - w, x + 1)
         if key == 0x68: # h
             x = max(0, x - 1)
         if key == 0x75: # u
