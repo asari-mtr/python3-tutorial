@@ -39,8 +39,7 @@ class BacklogHandler:
 
         tuple_list = []
         if isinstance(params, dict):
-            for k, v in params.items():
-                tuple_list.append((k, v))
+            tuple_list = list(params.items())
         elif isinstance(params, list):
             tuple_list = params
         else:
