@@ -49,6 +49,13 @@ def urlopen(req):
     except URLError as e:
         print('Error opening %s' % (e.reason))
 
+def bearer(token):
+    return "bearer {}".format(token)
+
+def token(token):
+    return "token {}".format(token)
+
+
 class BacklogHandler:
     def __init__(self):
         self.token = os.getenv('BACKLOG_TOKEN')
@@ -63,9 +70,6 @@ class BacklogHandler:
         req = urllib.request.Request(queried_url, method = "GET")
         return urlopen(req)
 
-def bearer(token):
-    return "bearer {}".format(token)
-
 class EsaHandler:
     def __init__(self):
         self.token = os.getenv('ESA_TOKEN')
@@ -79,6 +83,21 @@ class EsaHandler:
 
         req = urllib.request.Request(queried_url, headers = {'Authorization': bearer(self.token)}, method = "GET")
         return urlopen(req)
+
+class GithubHandler:
+    def __init__(self, repository):
+        self.token = os.getenv('GITHUB_TOKEN')
+        self.team = repository
+        self.endpoint = 'https://api.github.com'
+
+    def request(self, action, params={}):
+        url = "{}/repos/{}/{}".format(self.endpoint, self.team, action)
+
+        queried_url = set_query(url, params)
+
+        req = urllib.request.Request(queried_url, headers = {'Authorization': token(self.token)}, method = "GET")
+        return urlopen(req)
+
 
 
 # handler = EsaHandler()
