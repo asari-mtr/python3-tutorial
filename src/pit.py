@@ -35,12 +35,12 @@ def make_content(stdscr):
     win = stdscr.subwin(height - 1, width - int(width / 2), 0, int(width / 2))
     win.vline(curses.ACS_VLINE, height - 1)
     win.addstr(0, 2, "content")
+    win.refresh()
 
-    win2 = stdscr.subwin(int(height / 2) - 1, width - int(width / 2), int(height / 2), int(width / 2))
-    win2.hline(0, 1, curses.ACS_HLINE, int(width / 2) - 1)
-    win2.addstr(1, 2, "content")
+    win2 = curses.newpad(100, 100)
+    win2.scrollok(True)
 
-    return win
+    return win2
 
 def get_window_status(stdscr):
     height, width = stdscr.getmaxyx()
@@ -60,22 +60,35 @@ def main(stdscr):
     curses.panel.update_panels()
 
     key = ''
+    offset = 0
+    cursor = 0
     while True:
         height, width = stdscr.getmaxyx()
         footer.mvwin(height - 1, 0)
         footer.bkgd(" ", curses.color_pair(1))
         footer.addstr(0, 0, "Hello")
         window_status, pos = get_window_status(stdscr)
-        footer.addstr(0, pos, window_status)
+        footer.addstr(0, pos, "({}, {})".format(offset, cursor))
 
         stdscr.refresh()
         footer.refresh()
-        content.refresh()
+        for n in range(0, 50):
+            attr = curses.A_NORMAL if n != cursor else curses.A_REVERSE
+            content.addstr(n, 0, "{} 1234567890".format(n), attr)
+        content.refresh(offset, 0, 0, 0, height - 2, int(width / 2) - 1)
         key = stdscr.getch()
+        display_height = height - 2
         if key == 0x6a: # j
-            pass
+            cursor = min(cursor + 1, 49)
+            absolute_y = cursor - offset
+            if absolute_y > display_height:
+                offset += 1
+
         if key == 0x6b: # k
-            pass
+            cursor = max(cursor - 1, 0)
+            absolute_y = cursor - offset
+            if absolute_y < 0:
+                offset -= 1
         if key == 0x6c: # l
             pass
         if key == 0x68: # h
