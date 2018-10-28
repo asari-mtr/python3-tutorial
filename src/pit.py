@@ -30,6 +30,18 @@ def make_footer(stdscr):
     height, width = stdscr.getmaxyx()
     return stdscr.subwin(height - 1, 0)
 
+def make_content(stdscr):
+    height, width = stdscr.getmaxyx()
+    win = stdscr.subwin(height - 1, width - int(width / 2), 0, int(width / 2))
+    win.vline(curses.ACS_VLINE, height - 1)
+    win.addstr(0, 2, "content")
+
+    win2 = stdscr.subwin(int(height / 2) - 1, width - int(width / 2), int(height / 2), int(width / 2))
+    win2.hline(0, 1, curses.ACS_HLINE, int(width / 2) - 1)
+    win2.addstr(1, 2, "content")
+
+    return win
+
 def get_window_status(stdscr):
     height, width = stdscr.getmaxyx()
     status = "({}, {})".format(height, width)
@@ -42,27 +54,14 @@ def main(stdscr):
 
     update(stdscr)
 
-    win1, panel1 = make_panel(5, 20, 15, 15, "Panel 1")
-    win2, panel2 = make_panel(5, 20, 18, 18, "Panel 2")
-    # tb = curses.textpad.Textbox(win1)
-    # text = tb.edit() # terminate with ^G
-    # stdscr.addstr(7, 0, text)
-
     footer = make_footer(stdscr)
+    content = make_content(stdscr)
 
     curses.panel.update_panels()
 
     key = ''
-    current_panel = panel1
-    y, x = win1.getbegyx()
     while True:
-        current_panel.move(y, x)
-        curses.panel.update_panels()
         height, width = stdscr.getmaxyx()
-        if not key == '':
-            stdscr.addstr(3, 2, "pressed {}({})".format(key, hex(key)))
-        stdscr.addstr(4, 2, "panel1 {}".format(win1.getbegyx()))
-        stdscr.addstr(5, 2, "panel2 {}".format(win2.getbegyx()))
         footer.mvwin(height - 1, 0)
         footer.bkgd(" ", curses.color_pair(1))
         footer.addstr(0, 0, "Hello")
@@ -71,20 +70,18 @@ def main(stdscr):
 
         stdscr.refresh()
         footer.refresh()
+        content.refresh()
         key = stdscr.getch()
-        h, w = current_panel.window().getmaxyx()
         if key == 0x6a: # j
-            y = min(height - h - 1, y + 1)
+            pass
         if key == 0x6b: # k
-            y = max(0, y - 1)
+            pass
         if key == 0x6c: # l
-            x = min(width - w, x + 1)
+            pass
         if key == 0x68: # h
-            x = max(0, x - 1)
+            pass
         if key == 0x75: # u
-            current_panel = curses.panel.bottom_panel()
-            current_panel.top()
-            y, x = current_panel.window().getbegyx()
+            pass
         if key == 0x71: # q
             break
         if key == curses.KEY_RESIZE:
