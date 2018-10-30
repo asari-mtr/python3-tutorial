@@ -8,6 +8,9 @@ import time
 
 from pit.handler.window_handler import WindowHandler
 from pit.window.footer_window import FooterWindow
+from pit.window.list_window import ListWindow
+
+from pit.model.test_model import TestModel
 
 def make_content(stdscr):
     height, width = stdscr.getmaxyx()
@@ -15,53 +18,39 @@ def make_content(stdscr):
     win.vline(curses.ACS_VLINE, height - 1)
     win.addstr(0, 2, "content")
     win.refresh()
-
-    win2 = curses.newpad(100, 100)
-    win2.scrollok(True)
-
-    return win2
-
-def get_window_status(stdscr):
-    height, width = stdscr.getmaxyx()
-    status = "({}, {})".format(height, width)
-    return (status, width - len(status) - 1)
+    return win
 
 def main(stdscr):
     "main"
     handler = WindowHandler(stdscr)
 
     footer = FooterWindow(stdscr)
-    content = make_content(stdscr)
+    d_content = make_content(stdscr)
+    content = ListWindow(stdscr)
+
+    test_model = TestModel()
 
     key = ''
-    offset = 0
-    cursor = 0
     while True:
         footer.clear()
 
         height, width = stdscr.getmaxyx()
         footer.write_left('Hello2')
-        footer.write_right("({}, {})".format(offset, cursor))
+        footer.write_right("({}, {})".format(content.offset, content.cursor))
 
         stdscr.refresh()
         footer.refresh()
-        for n in range(0, 50):
-            attr = curses.A_NORMAL if n != cursor else curses.A_REVERSE
-            content.addstr(n, 0, "{} 1234567890".format(n), attr)
-        content.refresh(offset, 0, 0, 0, height - 2, int(width / 2) - 1)
+
+
+        content.set_model(test_model.list())
+        content.refresh()
+
         key = stdscr.getch()
-        display_height = height - 2
         if key == 0x6a: # j
-            cursor = min(cursor + 1, 49)
-            absolute_y = cursor - offset
-            if absolute_y > display_height:
-                offset += 1
+            content.scroll(1)
 
         if key == 0x6b: # k
-            cursor = max(cursor - 1, 0)
-            absolute_y = cursor - offset
-            if absolute_y < 0:
-                offset -= 1
+            content.scroll(-1)
         if key == 0x6c: # l
             pass
         if key == 0x68: # h

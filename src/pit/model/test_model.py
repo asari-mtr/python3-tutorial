@@ -1,13 +1,21 @@
 # -*- coding: utf-8 -*-
 
+import sys
+
+from typing import List
+
+sys.path.append('../../')
+
+from pit.items import Item, Content, Comment
+
 class TestModel:
     def __init__(self):
         pass
 
-    def list() -> List[Item]:
-        return [create_item(i) for i in range(1, 50)]
+    def list(self) -> List[Item]:
+        return [self.create_item(i) for i in range(1, 50)]
 
-    def create_item(i):
+    def create_item(self, i):
         item = Item()
         item['id'] = i
         item['title'] = "Title {}".format(i)
@@ -19,7 +27,9 @@ class TestModel:
         item['category'] = "Tips"
         item['lables'] = ["tips", "python"]
 
-    def content(item: Item) -> Content:
+        return item
+
+    def content(self, item: Item) -> Content:
         content = Content()
         content['id'] = item.id
         content['title'] = item.title
@@ -36,10 +46,10 @@ class TestModel:
 
         return content
 
-    def comment(item: Item) -> List[Comment]:
-        return [create_comment(i) for i in range(1, 20)]
+    def comment(self, item: Item) -> List[Comment]:
+        return [self.create_comment(i) for i in range(1, 20)]
 
-    def create_comment(i):
+    def create_comment(self, i):
          comment = Comment()
          comment['id'] = i
          comment['content'] = "Comment {}".format(i)
@@ -47,3 +57,5 @@ class TestModel:
          comment['updated'] = "2012-07-23T06:10:15Z"
          comment['author_id'] = 1234
          comment['author_name'] = "Test user"
+
+         return comment
