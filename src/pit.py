@@ -6,29 +6,8 @@ from curses import wrapper
 from curses import panel
 import time
 
-def update(stdscr):
-    stdscr.clear()
-
-def make_panel(h, w, y, x, s):
-    win = curses.newwin(h, w, y, x)
-    win.clear()
-    if h > 1:
-        win.border()
-        win.addstr(2, 2, s)
-    else:
-        win.addstr(0, 2, s)
-
-    panel = curses.panel.new_panel(win)
-    return win, panel
-
-def init_color():
-    curses.start_color()
-    curses.use_default_colors()
-    curses.init_pair(1, 7, 23)
-
-def make_footer(stdscr):
-    height, width = stdscr.getmaxyx()
-    return stdscr.subwin(height - 1, 0)
+from pit.handler.window_handler import WindowHandler
+from pit.window.footer_window import FooterWindow
 
 def make_content(stdscr):
     height, width = stdscr.getmaxyx()
@@ -49,26 +28,20 @@ def get_window_status(stdscr):
 
 def main(stdscr):
     "main"
-    init_color()
-    curses.curs_set(0)
+    handler = WindowHandler(stdscr)
 
-    update(stdscr)
-
-    footer = make_footer(stdscr)
+    footer = FooterWindow(stdscr)
     content = make_content(stdscr)
-
-    curses.panel.update_panels()
 
     key = ''
     offset = 0
     cursor = 0
     while True:
+        footer.clear()
+
         height, width = stdscr.getmaxyx()
-        footer.mvwin(height - 1, 0)
-        footer.bkgd(" ", curses.color_pair(1))
-        footer.addstr(0, 0, "Hello")
-        window_status, pos = get_window_status(stdscr)
-        footer.addstr(0, pos, "({}, {})".format(offset, cursor))
+        footer.write_left('Hello2')
+        footer.write_right("({}, {})".format(offset, cursor))
 
         stdscr.refresh()
         footer.refresh()
