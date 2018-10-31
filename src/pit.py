@@ -49,13 +49,16 @@ def main(stdscr):
         key = stdscr.getch()
         if key == 0x6a: # j
             content.scroll(1)
-
         if key == 0x6b: # k
             content.scroll(-1)
         if key == 0x6c: # l
             pass
         if key == 0x68: # h
             pass
+        if key == 0x67: # g
+            content.top()
+        if key == 0x47: # G
+            content.bottom()
         if key == 0x75: # u
             pass
         if key == 0x71: # q

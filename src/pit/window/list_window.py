@@ -62,20 +62,26 @@ class ListWindow:
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, 0, height - 2, int(width / 2) - 1)
 
+    def top(self):
+        self.scroll(-1000)
+
+    def bottom(self):
+        self.scroll(1000)
+
     def scroll(self, lines=1):
         height, width = self.stdscr.getmaxyx()
         # TODO: Calucurate 2
         display_height = height - 2
         if lines > 0:
-            # TODO: Calucurate 49
+            # TODO: Calucurate 48
             self.cursor = min(self.cursor + lines, 48)
             absolute_y = self.cursor - self.offset
             if absolute_y > display_height:
-                self.offset = self.offset + lines
+                self.offset = min(self.offset + lines, 48 - display_height)
         else:
             self.cursor = max(self.cursor + lines , 0)
             absolute_y = self.cursor - self.offset
             if 0 > absolute_y :
-                self.offset = self.offset + lines
+                self.offset = max(self.offset + lines, 0)
 
 
