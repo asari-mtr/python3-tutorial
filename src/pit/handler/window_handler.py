@@ -24,6 +24,8 @@ class WindowHandler:
         curses.start_color()
         curses.use_default_colors()
         curses.init_pair(1, 7, 23)
-
-
-
+        curses.init_pair(2, 6, 0)
+        curses.init_pair(3, 5, 0)
+        curses.init_pair(4, 4, 0)
+        curses.init_pair(5, 3, 0)
+        curses.init_pair(6, 2, 0)
