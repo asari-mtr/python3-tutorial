@@ -45,7 +45,7 @@ class ListWindow:
                 self.pad.addstr(i, col, item['title'], curses.color_pair(0))
                 col += len(item['title']) + 1
             else:
-                attr = curses.color_pair(1)
+                attr = curses.color_pair(18)
                 self.pad.addstr(i, 0, self.format(item), attr)
 
     def format(self, item):
@@ -53,6 +53,9 @@ class ListWindow:
         created = dateutil.parser.parse(item['created']).strftime("%Y-%m-%d %H:%M:%S")
         # TODO: Adjust padding
         return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
+
+    def clear(self):
+        self.pad.erase()
 
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
@@ -65,7 +68,7 @@ class ListWindow:
         display_height = height - 2
         if lines > 0:
             # TODO: Calucurate 49
-            self.cursor = min(self.cursor + lines, 49)
+            self.cursor = min(self.cursor + lines, 48)
             absolute_y = self.cursor - self.offset
             if absolute_y > display_height:
                 self.offset = self.offset + lines

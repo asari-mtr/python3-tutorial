@@ -23,9 +23,7 @@ class WindowHandler:
     def init_color(self):
         curses.start_color()
         curses.use_default_colors()
-        curses.init_pair(1, 7, 23)
-        curses.init_pair(2, 6, 0)
-        curses.init_pair(3, 5, 0)
-        curses.init_pair(4, 4, 0)
-        curses.init_pair(5, 3, 0)
-        curses.init_pair(6, 2, 0)
+        for n in range(0, 15):
+            curses.init_pair(n, n, 0)
+        for n in range(16, 31):
+            curses.init_pair(n, 15, n % 16)

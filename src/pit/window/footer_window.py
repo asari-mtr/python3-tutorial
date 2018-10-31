@@ -23,5 +23,5 @@ class FooterWindow:
         height, width = self.scr.getmaxyx()
         self.window.mvwin(height - 1, 0)
         # TODO: Move attribute
-        self.window.bkgd(" ", curses.color_pair(1))
+        self.window.bkgd(" ", curses.color_pair(22))
         self.window.refresh()

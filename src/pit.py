@@ -33,6 +33,7 @@ def main(stdscr):
     key = ''
     while True:
         footer.clear()
+        content.clear()
 
         height, width = stdscr.getmaxyx()
         footer.write_left('Hello2')
