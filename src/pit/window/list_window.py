@@ -22,7 +22,7 @@ class ListWindow:
 
     def __init__(self, stdscr):
         self.stdscr = stdscr
-        self.pad = curses.newpad(100, 100)
+        self.pad = curses.newpad(100, 400)
         self.pad.scrollok(True)
         self.cursor = 0
         self.offset = 0
@@ -52,7 +52,7 @@ class ListWindow:
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
         created = dateutil.parser.parse(item['created']).strftime("%Y-%m-%d %H:%M:%S")
         # TODO: Adjust padding
-        return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 20)
+        return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
 
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
@@ -61,16 +61,17 @@ class ListWindow:
 
     def scroll(self, lines=1):
         height, width = self.stdscr.getmaxyx()
-        absolute_y = self.cursor - self.offset
         # TODO: Calucurate 2
         display_height = height - 2
         if lines > 0:
             # TODO: Calucurate 49
             self.cursor = min(self.cursor + lines, 49)
+            absolute_y = self.cursor - self.offset
             if absolute_y > display_height:
                 self.offset = self.offset + lines
         else:
             self.cursor = max(self.cursor + lines , 0)
+            absolute_y = self.cursor - self.offset
             if 0 > absolute_y :
                 self.offset = self.offset + lines
 
