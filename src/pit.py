@@ -12,20 +12,11 @@ from pit.window.list_window import ListWindow
 
 from pit.model.test_model import TestModel
 
-def make_content(stdscr):
-    height, width = stdscr.getmaxyx()
-    win = stdscr.subwin(height - 1, width - int(width / 2), 0, int(width / 2))
-    win.vline(curses.ACS_VLINE, height - 1)
-    win.addstr(0, 2, "content")
-    win.refresh()
-    return win
-
 def main(stdscr):
     "main"
     handler = WindowHandler(stdscr)
 
     footer = FooterWindow(stdscr)
-    d_content = make_content(stdscr)
     content = ListWindow(stdscr)
 
     test_model = TestModel()
@@ -42,14 +33,17 @@ def main(stdscr):
         stdscr.refresh()
         footer.refresh()
 
-
         content.set_model(test_model.list())
         content.refresh()
 
         key = stdscr.getch()
         if key == 0x6a: # j
             content.scroll(1)
+        if key == 0xe: # C-n
+            content.scroll(1)
         if key == 0x6b: # k
+            content.scroll(-1)
+        if key == 0x10: # C-p
             content.scroll(-1)
         if key == 0x6c: # l
             pass

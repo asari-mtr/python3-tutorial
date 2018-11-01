@@ -60,7 +60,7 @@ class ListWindow:
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
         # TODO: Calucurate 2
-        self.pad.refresh(self.offset, 0, 0, 0, height - 2, int(width / 2) - 1)
+        self.pad.refresh(self.offset, 0, 0, 0, height - 2, width - 1)
 
     def top(self):
         self.scroll(-1000)
