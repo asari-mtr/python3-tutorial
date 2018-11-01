@@ -30,14 +30,14 @@ def main(stdscr):
 
     test_model = TestModel()
 
-    key = ''
+    key = 0
     while True:
         footer.clear()
         content.clear()
 
         height, width = stdscr.getmaxyx()
         footer.write_left('Hello2')
-        footer.write_right("({}, {})".format(content.offset, content.cursor))
+        footer.write_right("{} ({}, {})".format(hex(key), content.offset, content.cursor))
 
         stdscr.refresh()
         footer.refresh()
