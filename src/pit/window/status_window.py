@@ -2,7 +2,7 @@
 
 import curses
 
-class FooterWindow:
+class StatusWindow:
     def __init__(self, scr):
         self.scr = scr
         height, width = scr.getmaxyx()

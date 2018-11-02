@@ -7,7 +7,7 @@ from curses import panel
 import time
 
 from pit.handler.window_handler import WindowHandler
-from pit.window.footer_window import FooterWindow
+from pit.window.status_window import StatusWindow
 from pit.window.list_window import ListWindow
 
 from pit.model.test_model import TestModel
@@ -16,27 +16,33 @@ def main(stdscr):
     "main"
     handler = WindowHandler(stdscr)
 
-    footer = FooterWindow(stdscr)
+    status = StatusWindow(stdscr)
     content = ListWindow(stdscr)
 
     test_model = TestModel()
 
     key = 0
     while True:
-        footer.clear()
+        status.clear()
         content.clear()
 
         height, width = stdscr.getmaxyx()
-        footer.write_left('Hello2')
-        footer.write_right("{} ({}, {})".format(hex(key), content.offset, content.cursor))
+        status.write_left('Hello2')
+        status.write_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, content.offset, content.cursor))
 
         stdscr.refresh()
-        footer.refresh()
+        status.refresh()
 
         content.set_model(test_model.list())
         content.refresh()
 
         key = stdscr.getch()
+        if key == 0xa: # Enter
+            pass
+        if key == 0x2f: # /
+            pass
+        if key == 0x3a: # :
+            pass
         if key == 0x6a: # j
             content.scroll(1)
         if key == 0xe: # C-n

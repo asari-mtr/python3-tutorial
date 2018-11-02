@@ -38,7 +38,7 @@ class ListWindow:
                 col += len(created) + 1
                 self.pad.addstr(i, col, str(item['id']), curses.color_pair(3))
                 col += len(str(item['id'])) + 1
-                self.pad.addstr(i, col, item['status'], curses.color_pair(4))
+                self.pad.addstr(i, col, item['status'], curses.color_pair(6))
                 col += len(item['status']) + 1
                 self.pad.addstr(i, col, item['author_name'], curses.color_pair(5))
                 col += len(item['author_name']) + 1
