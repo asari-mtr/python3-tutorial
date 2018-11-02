@@ -9,6 +9,7 @@ from typing import List
 sys.path.append('../../')
 
 from pit.model.test_model import TestModel
+from pit.window.content_window import ContentWindow
 
 from pit.items import Item
 
@@ -27,26 +28,9 @@ class MainWindow:
         self.cursor = 0
         self.offset = 0
 
-    def set_model(self, items: List[Item]):
+    def set_model(self, model):
         # FIXME: Is there any other good way?
-        self.pad.erase()
-        for (i, item) in enumerate(items):
-            if i != self.cursor:
-                created = self.date_format(item['created'])
-                col = 0
-                self.pad.addstr(i, col, created, curses.color_pair(2))
-                col += len(created) + 1
-                self.pad.addstr(i, col, str(item['id']), curses.color_pair(3))
-                col += len(str(item['id'])) + 1
-                self.pad.addstr(i, col, item['status'], curses.color_pair(6))
-                col += len(item['status']) + 1
-                self.pad.addstr(i, col, item['author_name'], curses.color_pair(5))
-                col += len(item['author_name']) + 1
-                self.pad.addstr(i, col, item['title'], curses.color_pair(0))
-                col += len(item['title']) + 1
-            else:
-                attr = curses.color_pair(18)
-                self.pad.addstr(i, 0, self.format(item), attr)
+        self.model = model
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
@@ -63,6 +47,24 @@ class MainWindow:
 
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
+        self.pad.erase()
+        for (i, item) in enumerate(self.model.list()):
+            if i != self.cursor:
+                created = self.date_format(item['created'])
+                col = 0
+                self.pad.addstr(i, col, created, curses.color_pair(2))
+                col += len(created) + 1
+                self.pad.addstr(i, col, str(item['id']), curses.color_pair(3))
+                col += len(str(item['id'])) + 1
+                self.pad.addstr(i, col, item['status'], curses.color_pair(6))
+                col += len(item['status']) + 1
+                self.pad.addstr(i, col, item['author_name'], curses.color_pair(5))
+                col += len(item['author_name']) + 1
+                self.pad.addstr(i, col, item['title'], curses.color_pair(0))
+                col += len(item['title']) + 1
+            else:
+                attr = curses.color_pair(18)
+                self.pad.addstr(i, 0, self.format(item), attr)
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, 0, height - 2, width - 1)
 
@@ -107,4 +109,11 @@ class MainWindow:
             if 0 > absolute_y :
                 self.offset = max(self.offset + lines, 0)
 
+    def open(self):
+        return ContentWindow(self.stdscr, self.select_item())
 
+    def select_item(self):
+        return self.model.content(self.model.list()[self.cursor])
+
+    def name(self):
+        return "main"

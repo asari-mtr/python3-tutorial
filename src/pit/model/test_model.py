@@ -25,24 +25,33 @@ class TestModel:
         item['author_id'] = 1234
         item['author_name'] = "Test user"
         item['category'] = "Tips"
-        item['lables'] = ["tips", "python"]
+        item['labels'] = ["tips", "python"]
 
         return item
 
     def content(self, item: Item) -> Content:
         content = Content()
-        content['id'] = item.id
-        content['title'] = item.title
-        content['body'] = """"
-        This reference manual describes the syntax and “core semantics” of the language. It is terse, but attempts to be exact and complete. The semantics of non-essential built-in object types and of the built-in functions and modules are described in The Python Standard Library. For an informal introduction to the language, see The Python Tutorial. For C or C++ programmers, two additional manuals exist: Extending and Embedding the Python Interpreter describes the high-level picture of how to write a Python extension module, and the Python/C API Reference Manual describes the interfaces available to C/C++ programmers in detail.
+        content['id'] = item['id']
+        content['title'] = item['title']
+        content['body'] = """
+         This reference manual describes the syntax and “core semantics” 
+        of the language. It is terse, but attempts to be exact and complete.
+         The semantics of non-essential built-in object types and of 
+        the built-in functions and modules are described in The Python 
+        Standard Library. 
+         For an informal introduction to the language, see The Python Tutorial. 
+         For C or C++ programmers, two additional manuals exist: Extending and 
+        Embedding the Python Interpreter describes the high-level picture of 
+        how to write a Python extension module, and the Python/C API Reference 
+        Manual describes the interfaces available to C/C++ programmers in detail.
         """
-        content['created'] = item.created
-        content['updated'] = item.updated
-        content['status'] = item.status
-        content['author_id'] = item.author_id
-        content['author_name'] = item.author_name
-        content['category'] = item.category
-        content['lables'] = item.lablels
+        content['created'] = item['created']
+        content['updated'] = item['updated']
+        content['status'] = item['status']
+        content['author_id'] = item['author_id']
+        content['author_name'] = item['author_name']
+        content['category'] = item['category']
+        content['labels'] = item['labels']
 
         return content
 
