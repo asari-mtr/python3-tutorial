@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import curses
+import dateutil.parser
 from pit.items import Item
 
 import textwrap
@@ -18,15 +19,27 @@ class ContentWindow:
     def set_model(self, item: Item):
         self.item = item
 
+    def date_format(self, date):
+        # TODO: duplicate
+        return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
+
+    def labels_format(self, labels):
+        return " ".join(map(lambda label: "[{}]".format(label), labels))
+
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
         self.pad.vline(curses.ACS_VLINE, height - 1)
-        self.pad.addstr(0, 2, self.item['title'], curses.color_pair(0))
-        self.pad.addstr(1, 2, self.item['created'], curses.color_pair(2))
-        self.pad.addstr(1, 30 - len(self.item['status']), self.item['status'], curses.color_pair(6))
+        self.pad.addstr(0, 2, "[{}]".format(self.item['status']), curses.color_pair(6))
+        self.pad.addstr(' ')
+        self.pad.addstr('{}/'.format(self.item['category']), curses.color_pair(0))
+        self.pad.addstr(self.item['title'], curses.color_pair(0))
+        self.pad.addstr(1, 2, self.date_format(self.item['created']), curses.color_pair(2))
+        self.pad.addstr(' ')
+        self.pad.addstr(self.item['author_name'], curses.color_pair(5))
+        self.pad.addstr(2, 2, self.labels_format(self.item['labels']), curses.color_pair(3))
         lines = textwrap.dedent(self.item['body']).strip().splitlines()
         for i, line in enumerate(lines):
-            self.pad.addstr(i + 3, 2, line, curses.color_pair(0))
+            self.pad.addstr(i + 4, 2, line, curses.color_pair(0))
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, int(width / 2) - 1, height - 2, width - 1)
 

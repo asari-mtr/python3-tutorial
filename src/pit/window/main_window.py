@@ -41,7 +41,6 @@ class MainWindow:
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
 
-
     def clear(self):
         self.pad.erase()
 
