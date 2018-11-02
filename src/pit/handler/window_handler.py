@@ -8,7 +8,7 @@ from curses import panel
 
 sys.path.append('../../')
 
-from pit.window.list_window import ListWindow
+from pit.window.main_window import MainWindow
 
 class WindowHandler:
     def __init__(self, stdscr):

@@ -12,7 +12,7 @@ from pit.model.test_model import TestModel
 
 from pit.items import Item
 
-class ListWindow:
+class MainWindow:
     """
     This class manage the list.
 
@@ -32,7 +32,7 @@ class ListWindow:
         self.pad.erase()
         for (i, item) in enumerate(items):
             if i != self.cursor:
-                created = dateutil.parser.parse(item['created']).strftime("%Y-%m-%d %H:%M:%S")
+                created = self.date_format(item['created'])
                 col = 0
                 self.pad.addstr(i, col, created, curses.color_pair(2))
                 col += len(created) + 1
@@ -50,9 +50,13 @@ class ListWindow:
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
-        created = dateutil.parser.parse(item['created']).strftime("%Y-%m-%d %H:%M:%S")
+        created = self.date_format(item['created'])
         # TODO: Adjust padding
         return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
+
+    def date_format(self, date):
+        return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
+
 
     def clear(self):
         self.pad.erase()

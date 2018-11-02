@@ -8,7 +8,7 @@ import time
 
 from pit.handler.window_handler import WindowHandler
 from pit.window.status_window import StatusWindow
-from pit.window.list_window import ListWindow
+from pit.window.main_window import MainWindow
 
 from pit.model.test_model import TestModel
 
@@ -17,52 +17,52 @@ def main(stdscr):
     handler = WindowHandler(stdscr)
 
     status = StatusWindow(stdscr)
-    content = ListWindow(stdscr)
+    main_window = MainWindow(stdscr)
 
     test_model = TestModel()
 
     key = 0
     while True:
         status.clear()
-        content.clear()
+        main_window.clear()
 
         height, width = stdscr.getmaxyx()
         status.write_left('Hello2')
-        status.write_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, content.offset, content.cursor))
+        status.write_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, main_window.offset, main_window.cursor))
 
         stdscr.refresh()
         status.refresh()
 
-        content.set_model(test_model.list())
-        content.refresh()
+        main_window.set_model(test_model.list())
+        main_window.refresh()
 
         key = stdscr.getch()
         if key == 0xa: # Enter
-            pass
+            main_window.open()
         if key == 0x2f: # /
             pass
         if key == 0x3a: # :
             pass
         if key == 0x6a: # j
-            content.scroll(1)
+            main_window.scroll(1)
         if key == 0xe: # C-n
-            content.scroll(1)
+            main_window.scroll(1)
         if key == 0x6b: # k
-            content.scroll(-1)
+            main_window.scroll(-1)
         if key == 0x10: # C-p
-            content.scroll(-1)
+            main_window.scroll(-1)
         if key == 0x2: # C-b
-            content.pageup()
+            main_window.pageup()
         if key == 0x6: # C-f
-            content.pagedown()
+            main_window.pagedown()
         if key == 0x6c: # l
             pass
         if key == 0x68: # h
             pass
         if key == 0x67: # g
-            content.top()
+            main_window.top()
         if key == 0x47: # G
-            content.bottom()
+            main_window.bottom()
         if key == 0x75: # u
             pass
         if key == 0x71: # q
