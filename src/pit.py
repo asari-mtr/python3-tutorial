@@ -45,6 +45,10 @@ def main(stdscr):
             content.scroll(-1)
         if key == 0x10: # C-p
             content.scroll(-1)
+        if key == 0x2: # C-b
+            content.pageup()
+        if key == 0x6: # C-f
+            content.pagedown()
         if key == 0x6c: # l
             pass
         if key == 0x68: # h
@@ -58,6 +62,6 @@ def main(stdscr):
         if key == 0x71: # q
             break
         if key == curses.KEY_RESIZE:
-            update(stdscr)
+            stdscr.clear()
 
 wrapper(main)

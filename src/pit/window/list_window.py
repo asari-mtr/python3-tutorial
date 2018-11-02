@@ -68,6 +68,25 @@ class ListWindow:
     def bottom(self):
         self.scroll(1000)
 
+    def pageup(self):
+        height, width = self.stdscr.getmaxyx()
+        # TODO: Calucurate 1
+        display_height = height - 1
+
+        # TODO: Calucurate 48
+        self.cursor = max(self.cursor - display_height, 0)
+        self.offset = self.cursor
+
+    def pagedown(self):
+        height, width = self.stdscr.getmaxyx()
+        # TODO: Calucurate 1
+        display_height = height - 1
+
+        # TODO: Calucurate 48
+        self.cursor = min(self.cursor + display_height, 48)
+        if self.offset + display_height < 48:
+            self.offset = self.cursor
+
     def scroll(self, lines=1):
         height, width = self.stdscr.getmaxyx()
         # TODO: Calucurate 2
