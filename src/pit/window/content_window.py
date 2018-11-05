@@ -7,6 +7,9 @@ from pit.items import Item
 import textwrap
 
 class ContentWindow:
+    def name():
+        return "content"
+
     def __init__(self, stdscr, item):
         self.stdscr = stdscr
         self.pad = curses.newpad(100, 400)
@@ -50,9 +53,6 @@ class ContentWindow:
 
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, int(width / 2) - 1, height - 2, width - 1)
-
-    def name(self):
-        return "content"
 
     def clear(self):
         self.pad.erase()

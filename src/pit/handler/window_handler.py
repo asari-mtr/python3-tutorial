@@ -16,6 +16,29 @@ class WindowHandler:
         self.init_color()
         curses.curs_set(0)
         self.update()
+        self.current_window_index = 0
+        self.displayed = []
+        self.views = {}
+
+    def open(self, window):
+        if not (window.name in self.views.keys()):
+            self.views[window.name] = window(self.stdscr)
+        self.displayed.append(self.views[window.name])
+        self.stdscr.refresh()
+        self.refresh()
+
+    def current_window(self):
+        if len(self.displayed) == 0 or self.current_window_index > len(self.displayed):
+            return None
+
+        return self.displayed[self.current_window_index]
+
+    def clear(self):
+        self.current_window().clear()
+
+    def refresh(self):
+        self.current_window().refresh()
+        self.stdscr.refresh()
 
     def update(self):
         self.stdscr.clear()

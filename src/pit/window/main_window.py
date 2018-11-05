@@ -21,16 +21,16 @@ class MainWindow:
     """
     pass
 
+    def name():
+        return "main"
+
     def __init__(self, stdscr):
         self.stdscr = stdscr
         self.pad = curses.newpad(100, 400)
         self.pad.scrollok(True)
         self.cursor = 0
         self.offset = 0
-
-    def set_model(self, model):
-        # FIXME: Is there any other good way?
-        self.model = model
+        self.model = TestModel()
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
@@ -113,5 +113,3 @@ class MainWindow:
     def select_item(self):
         return self.model.content(self.model.list()[self.cursor])
 
-    def name(self):
-        return "main"
