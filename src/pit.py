@@ -124,26 +124,19 @@ def main(stdscr):
     "main"
     handler = WindowHandler(stdscr)
 
-    status = StatusWindow(stdscr)
-
     key = 0
     request = Request.MAIN_VIEW
     while view_driver(handler, request) is None:
+        height, width = stdscr.getmaxyx()
+        handler.status_left('[{}]'.format(handler.current_window().name()))
+        handler.status_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, handler.current_window().offset, handler.current_window().cursor))
 
+        handler.refresh()
         key = stdscr.getch()
         request = get_request(key)
 
-        height, width = stdscr.getmaxyx()
-        # status.write_left('[{}]'.format(handler.current_window.name()))
-        # status.write_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, handler.current_window.offset, handler.current_window.cursor))
-
-        status.refresh()
-
-        handler.refresh()
-
         if key == curses.KEY_RESIZE:
             stdscr.clear()
-        status.clear()
         handler.clear()
 
 wrapper(main)

@@ -9,6 +9,7 @@ from curses import panel
 sys.path.append('../../')
 
 from pit.window.main_window import MainWindow
+from pit.window.status_window import StatusWindow
 
 class WindowHandler:
     def __init__(self, stdscr):
@@ -19,6 +20,8 @@ class WindowHandler:
         self.current_window_index = 0
         self.displayed = []
         self.views = {}
+        self.status_window = StatusWindow(stdscr)
+
 
     def open(self, window):
         if not (window.name in self.views.keys()):
@@ -33,11 +36,19 @@ class WindowHandler:
 
         return self.displayed[self.current_window_index]
 
+    def status_left(self, msg):
+        self.status_window.write_left(msg)
+
+    def status_right(self, msg):
+        self.status_window.write_right(msg)
+
     def clear(self):
         self.current_window().clear()
+        self.status_window.clear()
 
     def refresh(self):
         self.current_window().refresh()
+        self.status_window.refresh()
         self.stdscr.refresh()
 
     def update(self):

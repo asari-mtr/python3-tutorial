@@ -21,7 +21,7 @@ class MainWindow:
     """
     pass
 
-    def name():
+    def name(self):
         return "main"
 
     def __init__(self, stdscr):

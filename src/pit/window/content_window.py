@@ -7,7 +7,7 @@ from pit.items import Item
 import textwrap
 
 class ContentWindow:
-    def name():
+    def name(self):
         return "content"
 
     def __init__(self, stdscr, item):
