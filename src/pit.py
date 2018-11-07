@@ -13,26 +13,22 @@ from pit.window.main_window import MainWindow
 from pit.model.test_model import TestModel
 
 from pit.request import Request
-
-class KeyMap():
-    def __init__(self, alias, request):
-        self.alias = alias
-        self.request = request
+from pit.key_map import KeyMap
 
 key_maps = {
-        KeyMap(0xa,     Request.OPEN),              # Enter
-        KeyMap(0x6a,    Request.NEXT_LINE),         # j
-        KeyMap(0x6b,    Request.PREV_LINE),         # k
-        KeyMap(0xe,     Request.PAGE_DOWN),         # C-n
-        KeyMap(0x10,    Request.PAGE_UP),           # C-p
-        KeyMap(0x6,     Request.HALF_PAGE_DOWN),    # C-f
-        KeyMap(0x2,     Request.HALF_PAGE_UP),      # C-b
-        KeyMap(0x67,    Request.MOVE_TOP),          # g
-        KeyMap(0x47,    Request.MOVE_BOTTOM),       # G
-        KeyMap(0x71,    Request.QUIT),              # q
+        KeyMap('Enter',     Request.OPEN),
+        KeyMap('j',         Request.NEXT_LINE),
+        KeyMap('k',         Request.PREV_LINE),
+        KeyMap('C-n',       Request.PAGE_DOWN),
+        KeyMap('C-p',       Request.PAGE_UP),
+        KeyMap('C-f',       Request.HALF_PAGE_DOWN),
+        KeyMap('C-b',       Request.HALF_PAGE_UP),
+        KeyMap('g',         Request.MOVE_TOP),
+        KeyMap('G',         Request.MOVE_BOTTOM),
+        KeyMap('q',         Request.QUIT),
 
-        KeyMap(0x6d,    Request.MAIN_VIEW),         # m
-        KeyMap(0x62,    Request.BODY_VIEW),         # b
+        KeyMap('m',         Request.MAIN_VIEW),
+        KeyMap('b',         Request.BODY_VIEW),
 }
 
 def get_request(key):
