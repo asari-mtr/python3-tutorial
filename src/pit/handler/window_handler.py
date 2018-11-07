@@ -10,6 +10,7 @@ sys.path.append('../../')
 
 from pit.window.main_window import MainWindow
 from pit.window.status_window import StatusWindow
+from pit.request import Request
 
 class WindowHandler:
     def __init__(self, stdscr):
@@ -21,7 +22,6 @@ class WindowHandler:
         self.displayed = []
         self.views = {}
         self.status_window = StatusWindow(stdscr)
-
 
     def open(self, window):
         if not (window.name in self.views.keys()):
@@ -61,3 +61,57 @@ class WindowHandler:
             curses.init_pair(n, n, 0)
         for n in range(16, 31):
             curses.init_pair(n, 15, n % 16)
+
+    def view_driver(self, request):
+       view = self.current_window()
+       if request == Request.NOBIND:
+           pass
+       elif request == Request.OPEN:
+           prev_window = view
+           view= view.open()
+
+       elif request == Request.NEXT_LINE:
+           view.scroll(1)
+
+       elif request == Request.PREV_LINE:
+           view.scroll(-1)
+
+       elif request == Request.PAGE_DOWN:
+           win = view if view.prev_window is None else view.prev_window
+           win.scroll(1)
+           if view.prev_window is not None:
+               view.set_model(view.prev_window.select_item())
+
+       elif request == Request.PAGE_UP:
+           win = view if view.prev_window is None else view.prev_window
+           win.scroll(-1)
+           if view.prev_window is not None:
+               view.set_model(view.prev_window.select_item())
+
+       elif request == Request.HALF_PAGE_UP:
+           view.pageup()
+
+       elif request == Request.HALF_PAGE_UP:
+           view.pagedown()
+
+       elif request == Request.MOVE_TOP:
+           view.top()
+
+       elif request == Request.MOVE_BOTTOM:
+           view.bottom()
+
+       elif request == Request.QUIT:
+           if view.prev_window is None:
+               return True
+           else:
+               view = view.prev_window
+               view.prev_window = None
+
+       elif request == Request.MAIN_VIEW:
+           self.open(MainWindow)
+
+       elif request == Request.BODY_VIEW:
+           self.open(BodyWindow)
+
+       else:
+           pass
