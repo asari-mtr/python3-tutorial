@@ -81,16 +81,16 @@ def view_driver(handler, request):
         view.scroll(-1)
 
     elif request == Request.PAGE_DOWN:
-        win = view if prev_window is None else prev_window
+        win = view if view.prev_window is None else view.prev_window
         win.scroll(1)
-        if prev_window is not None:
-            view.set_model(prev_window.select_item())
+        if view.prev_window is not None:
+            view.set_model(view.prev_window.select_item())
 
     elif request == Request.PAGE_UP:
-        win = view if prev_window is None else prev_window
+        win = view if view.prev_window is None else view.prev_window
         win.scroll(-1)
-        if prev_window is not None:
-            view.set_model(prev_window.select_item())
+        if view.prev_window is not None:
+            view.set_model(view.prev_window.select_item())
 
     elif request == Request.HALF_PAGE_UP:
         view.pageup()
@@ -105,11 +105,11 @@ def view_driver(handler, request):
         view.bottom()
 
     elif request == Request.QUIT:
-        if prev_window is None:
+        if view.prev_window is None:
             return True
         else:
-            view = prev_window
-            prev_window = None
+            view = view.prev_window
+            view.prev_window = None
 
     elif request == Request.MAIN_VIEW:
         handler.open(MainWindow)

@@ -31,6 +31,7 @@ class MainWindow:
         self.cursor = 0
         self.offset = 0
         self.model = TestModel()
+        self.prev_window = None
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
