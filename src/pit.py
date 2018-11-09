@@ -38,13 +38,6 @@ def get_request(key):
 
     return Request.NOBIND
 
-def open_main_view(view):
-    pass
-
-def open_body_view(view):
-    pass
-
-
 def main(stdscr):
     "main"
     handler = WindowHandler(stdscr)
