@@ -61,7 +61,11 @@ def main(stdscr):
     request = Request.VIEW_MAIN
     while handler.view_driver(request) is None:
         height, width = stdscr.getmaxyx()
-        handler.status_left('[{}]'.format(handler.current_window().name()))
+        current_window = handler.current_window()
+        if current_window.prev_window is None:
+            handler.status_left('[{}]'.format(current_window.name()))
+        else:
+            handler.status_left('[{} -> {}]'.format(type(current_window.prev_window), current_window.name()))
         handler.status_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, handler.current_window().offset, handler.current_window().cursor))
 
         handler.refresh()

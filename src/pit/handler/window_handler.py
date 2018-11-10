@@ -23,10 +23,16 @@ class WindowHandler:
         self.views = {}
         self.status_window = StatusWindow(stdscr)
 
-    def open(self, window):
+    def open(self, window, model=None):
         if not (window.name in self.views.keys()):
             self.views[window.name] = window(self.stdscr)
-        self.displayed.append(self.views[window.name])
+        view = self.views[window.name]
+        if model is not None:
+            view.model = model
+        if len(self.displayed) > 0:
+            view.prev_window = self.current_window()
+        self.displayed.append(view)
+        self.change_window()
         self.stdscr.refresh()
         self.refresh()
 
@@ -35,6 +41,12 @@ class WindowHandler:
             return None
 
         return self.displayed[self.current_window_index]
+
+    def change_window(self):
+        if len(self.displayed) < 2:
+            return
+
+        self.current_window_index = 1 - self.current_window_index
 
     def status_left(self, msg):
         self.status_window.write_left(msg)
@@ -47,7 +59,8 @@ class WindowHandler:
         self.status_window.clear()
 
     def refresh(self):
-        self.current_window().refresh()
+        for view in self.displayed:
+            view.refresh()
         self.status_window.refresh()
         self.stdscr.refresh()
 
@@ -68,17 +81,46 @@ class WindowHandler:
            pass
 
        elif request == Request.ENTER:
-           prev_window = view
-           view = view.open(self)
-           self.current_window()
+           view.open(self)
+
+       elif request == Request.VIEW_NEXT:
+           self.change_window()
 
        elif request == Request.NEXT:
-           view.scroll(1)
+           if view.prev_window is not None:
+               view.prev_window.scroll(1)
+               item = view.prev_window.select_item()
+               view.model = item
+           else:
+               view.scroll(1)
 
        elif request == Request.PREVIOUS:
-           view.scroll(-1)
+           if view.prev_window is not None:
+               view.prev_window.scroll(-1)
+               item = view.prev_window.select_item()
+               view.model = item
+           else:
+               view.scroll(-1)
 
-       elif request == Request.MOVE_DOWN:
+       elif request in [Request.QUIT, Request.VIEW_CLOSE]:
+           if view.prev_window is None:
+               return True
+           else:
+               self.displayed.pop()
+               self.current_window_index = 0
+
+       elif request == Request.VIEW_MAIN:
+           self.open(MainWindow)
+
+       elif request == Request.VIEW_BODY:
+           self.open(BodyWindow)
+
+       elif view.pager:
+           self.pager_driver(view, request)
+
+
+    def pager_driver(self, view, request):
+       if request == Request.MOVE_DOWN:
            view.scroll(1)
 
        elif request == Request.MOVE_UP:
@@ -107,19 +149,6 @@ class WindowHandler:
 
        elif request == Request.MOVE_LAST_LINE:
            view.bottom()
-
-       elif request in [Request.QUIT, Request.VIEW_CLOSE]:
-           if view.prev_window is None:
-               return True
-           else:
-               view = view.prev_window
-               view.prev_window = None
-
-       elif request == Request.VIEW_MAIN:
-           self.open(MainWindow)
-
-       elif request == Request.VIEW_BODY:
-           self.open(BodyWindow)
 
        else:
            pass

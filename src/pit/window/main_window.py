@@ -10,7 +10,7 @@ sys.path.append('../../')
 
 from pit.model.test_model import TestModel
 from pit.window.base_window import BaseWindow
-from pit.window.content_window import ContentWindow
+from pit.window.body_window import BodyWindow
 
 from pit.items import Item
 
@@ -27,18 +27,6 @@ class MainWindow(BaseWindow):
 
     def __init__(self, stdscr):
         super().__init__(stdscr)
-
-    def format(self, item):
-        # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
-        created = self.date_format(item['created'])
-        # TODO: Adjust padding
-        return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
-
-    def date_format(self, date):
-        return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
-
-    def clear(self):
-        self.pad.erase()
 
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
@@ -63,52 +51,18 @@ class MainWindow(BaseWindow):
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, 0, height - 2, width - 1)
 
-    def top(self):
-        self.scroll(-1000)
-
-    def bottom(self):
-        self.scroll(1000)
-
-    def pageup(self):
-        height, width = self.stdscr.getmaxyx()
-        # TODO: Calucurate 1
-        display_height = height - 1
-
-        self.cursor = max(self.cursor - display_height, 0)
-        self.offset = self.cursor
-
-    def pagedown(self):
-        height, width = self.stdscr.getmaxyx()
-        # TODO: Calucurate 1
-        display_height = height - 1
-
-        last = len(self.model.list()) - 1
-        self.cursor = min(self.cursor + display_height, last)
-        if self.offset + display_height < last:
-            self.offset = self.cursor
-
-    def scroll(self, lines=1):
-        height, width = self.stdscr.getmaxyx()
-        # TODO: Calucurate 2
-        display_height = height - 2
-        last = len(self.model.list()) - 1
-        if lines > 0:
-            self.cursor = min(self.cursor + lines, last)
-            absolute_y = self.cursor - self.offset
-            if absolute_y > display_height:
-                self.offset = min(self.offset + lines, last - display_height)
-        else:
-            self.cursor = max(self.cursor + lines , 0)
-            absolute_y = self.cursor - self.offset
-            if 0 > absolute_y :
-                self.offset = max(self.offset + lines, 0)
-
     def open(self, handler):
-        if not ContentWindow.name in handler.views:
-            handler.views[ContentWindow.name] = ContentWindow(self.stdscr, self.select_item())
-
-        return handler.views[ContentWindow.name]
+        handler.open(BodyWindow, self.select_item())
 
     def select_item(self):
         return self.model.content(self.model.list()[self.cursor])
+
+    def format(self, item):
+        # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
+        created = self.date_format(item['created'])
+        # TODO: Adjust padding
+        return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
+
+    def date_format(self, date):
+        return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
 

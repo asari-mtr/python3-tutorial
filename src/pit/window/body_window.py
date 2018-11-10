@@ -5,22 +5,15 @@ import dateutil.parser
 from pit.items import Item
 
 import textwrap
+from pit.window.base_window import BaseWindow
 
-class ContentWindow:
+class BodyWindow(BaseWindow):
     def name(self):
         return "content"
 
-    def __init__(self, stdscr, item):
-        self.stdscr = stdscr
-        self.pad = curses.newpad(100, 400)
-        self.pad.scrollok(True)
-        self.cursor = 0
-        self.offset = 0
-        self.set_model(item)
-        self.refresh()
-
-    def set_model(self, item: Item):
-        self.item = item
+    def __init__(self, stdscr):
+        super().__init__(stdscr)
+        self.pager = False
 
     def date_format(self, date):
         # TODO: duplicate
@@ -29,6 +22,9 @@ class ContentWindow:
     def labels_format(self, labels):
         return " ".join(map(lambda label: "[{}]".format(label), labels))
 
+    def open(self):
+        pass
+
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
         offset_x = 1
@@ -36,15 +32,15 @@ class ContentWindow:
         self.pad.attrset(curses.color_pair(20))
         self.pad.vline(curses.ACS_VLINE, height - 1)
         self.pad.attrset(curses.color_pair(0))
-        self.pad.addstr(0, offset_x, "[{}]".format(self.item['status']), curses.color_pair(6))
+        self.pad.addstr(0, offset_x, "[{}]".format(self.model['status']), curses.color_pair(6))
         self.pad.addstr(' ')
-        self.pad.addstr('{}/'.format(self.item['category']), curses.color_pair(0))
-        self.pad.addstr(self.item['title'], curses.color_pair(0))
-        self.pad.addstr(1, offset_x, self.date_format(self.item['created']), curses.color_pair(2))
+        self.pad.addstr('{}/'.format(self.model['category']), curses.color_pair(0))
+        self.pad.addstr(self.model['title'], curses.color_pair(0))
+        self.pad.addstr(1, offset_x, self.date_format(self.model['created']), curses.color_pair(2))
         self.pad.addstr(' ')
-        self.pad.addstr(self.item['author_name'], curses.color_pair(5))
-        self.pad.addstr(2, offset_x, self.labels_format(self.item['labels']), curses.color_pair(3))
-        lines = textwrap.dedent(self.item['body']).strip().splitlines()
+        self.pad.addstr(self.model['author_name'], curses.color_pair(5))
+        self.pad.addstr(2, offset_x, self.labels_format(self.model['labels']), curses.color_pair(3))
+        lines = textwrap.dedent(self.model['body']).strip().splitlines()
         for i, line in enumerate(lines):
             self.pad.addstr(i + 4, offset_x, line, curses.color_pair(0))
 
@@ -53,6 +49,3 @@ class ContentWindow:
 
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, int(width / 2) - 1, height - 2, width - 1)
-
-    def clear(self):
-        self.pad.erase()
