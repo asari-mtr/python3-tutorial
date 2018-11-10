@@ -107,13 +107,17 @@ class GithubHandler:
 #     print("[{}] {}".format(post['number'], post['name']))
 #     print(post['body_md'])
 
-handler = BacklogHandler()
-issues = handler.request('issues', [('projectId[]', 90134), ('statusId[]', 1), ('statusId[]', 2), ('count', 100)])
-issues = handler.request('issues', {'projectId[]': 90134, 'statusId[]': 1, 'count': 100})
-for issue in issues:
-    print("[{}] ({}) {} {} by {}".format(issue['issueKey'], issue['status']['name'], issue['summary'], issue['dueDate'], issue['createdUser']['name']))
-    comments = handler.request('issues/{}/comments'.format(issue['issueKey']), [('count', 1)])
-    if len(comments) > 0:
-        comment = comments[0]['content']
-        print(comment) if comment is not None else None
+# handler = BacklogHandler()
+# issues = handler.request('issues', {'projectId[]': 90134, 'statusId[]': 1, 'count': 100})
+# issues = handler.request('issues', [('projectId[]', 90134), ('statusId[]', 1), ('statusId[]', 2), ('count', 3)])
+# for issue in issues:
+#     print("[{}] ({}) {} {} by {}".format(issue['issueKey'], issue['status']['name'], issue['summary'], issue['dueDate'], issue['createdUser']['name']))
+#     comments = handler.request('issues/{}/comments'.format(issue['issueKey']), [('count', 1)])
+#     if len(comments) > 0:
+#         comment = comments[0]['content']
+#         print(comment) if comment is not None else None
 
+# handler = GithubHandler("asari-mtr/study-record")
+# issues = handler.request("issues")
+# for issue in issues:
+#      print("[{}] {}".format(issue['number'], issue['title']))

@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 
 import curses
 
-from pit.model.test_model import TestModel
+from pit.model.github_model import GithubModel
 
 class BaseWindow(ABC):
 
@@ -14,7 +14,7 @@ class BaseWindow(ABC):
         self.pad.scrollok(True)
         self.cursor = 0
         self.offset = 0
-        self.model = TestModel()
+        self.model = GithubModel()
         self.prev_window = None
         self.pager = True
         super().__init__()

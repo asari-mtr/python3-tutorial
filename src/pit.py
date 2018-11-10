@@ -10,8 +10,6 @@ from pit.handler.window_handler import WindowHandler
 from pit.window.status_window import StatusWindow
 from pit.window.main_window import MainWindow
 
-from pit.model.test_model import TestModel
-
 from pit.request import Request
 from pit.key_map import KeyMap
 

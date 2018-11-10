@@ -8,7 +8,6 @@ from typing import List
 
 sys.path.append('../../')
 
-from pit.model.test_model import TestModel
 from pit.window.base_window import BaseWindow
 from pit.window.body_window import BodyWindow
 
