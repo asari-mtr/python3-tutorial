@@ -82,6 +82,12 @@ class WindowHandler:
        elif request == Request.MOVE_UP:
            view.scroll(-1)
 
+       elif request == Request.MOVE_PAGE_UP:
+           view.pageup()
+
+       elif request == Request.MOVE_PAGE_DOWN:
+           view.pagedown()
+
        elif request == Request.MOVE_PAGE_DOWN:
            win = view if view.prev_window is None else view.prev_window
            win.scroll(1)
@@ -93,12 +99,6 @@ class WindowHandler:
            win.scroll(-1)
            if view.prev_window is not None:
                view.set_model(view.prev_window.select_item())
-
-       elif request == Request.MOVE_HALF_PAGE_UP:
-           view.pageup()
-
-       elif request == Request.MOVE_HALF_PAGE_UP:
-           view.pagedown()
 
        elif request == Request.MOVE_FIRST_LINE:
            view.top()
