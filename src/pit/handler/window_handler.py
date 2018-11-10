@@ -66,9 +66,11 @@ class WindowHandler:
        view = self.current_window()
        if request == Request.NOBIND:
            pass
+
        elif request == Request.ENTER:
            prev_window = view
-           view= view.open()
+           view = view.open(self)
+           self.current_window()
 
        elif request == Request.NEXT:
            view.scroll(1)

@@ -9,11 +9,12 @@ from typing import List
 sys.path.append('../../')
 
 from pit.model.test_model import TestModel
+from pit.window.base_window import BaseWindow
 from pit.window.content_window import ContentWindow
 
 from pit.items import Item
 
-class MainWindow:
+class MainWindow(BaseWindow):
     """
     This class manage the list.
 
@@ -25,13 +26,7 @@ class MainWindow:
         return "main"
 
     def __init__(self, stdscr):
-        self.stdscr = stdscr
-        self.pad = curses.newpad(100, 400)
-        self.pad.scrollok(True)
-        self.cursor = 0
-        self.offset = 0
-        self.model = TestModel()
-        self.prev_window = None
+        super().__init__(stdscr)
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
@@ -108,8 +103,11 @@ class MainWindow:
             if 0 > absolute_y :
                 self.offset = max(self.offset + lines, 0)
 
-    def open(self):
-        return ContentWindow(self.stdscr, self.select_item())
+    def open(self, handler):
+        if not ContentWindow.name in handler.views:
+            handler.views[ContentWindow.name] = ContentWindow(self.stdscr, self.select_item())
+
+        return handler.views[ContentWindow.name]
 
     def select_item(self):
         return self.model.content(self.model.list()[self.cursor])
