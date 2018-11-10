@@ -66,51 +66,57 @@ class WindowHandler:
        view = self.current_window()
        if request == Request.NOBIND:
            pass
-       elif request == Request.OPEN:
+       elif request == Request.ENTER:
            prev_window = view
            view= view.open()
 
-       elif request == Request.NEXT_LINE:
+       elif request == Request.NEXT:
            view.scroll(1)
 
-       elif request == Request.PREV_LINE:
+       elif request == Request.PREVIOUS:
            view.scroll(-1)
 
-       elif request == Request.PAGE_DOWN:
+       elif request == Request.MOVE_DOWN:
+           view.scroll(1)
+
+       elif request == Request.MOVE_UP:
+           view.scroll(-1)
+
+       elif request == Request.MOVE_PAGE_DOWN:
            win = view if view.prev_window is None else view.prev_window
            win.scroll(1)
            if view.prev_window is not None:
                view.set_model(view.prev_window.select_item())
 
-       elif request == Request.PAGE_UP:
+       elif request == Request.MOVE_PAGE_UP:
            win = view if view.prev_window is None else view.prev_window
            win.scroll(-1)
            if view.prev_window is not None:
                view.set_model(view.prev_window.select_item())
 
-       elif request == Request.HALF_PAGE_UP:
+       elif request == Request.MOVE_HALF_PAGE_UP:
            view.pageup()
 
-       elif request == Request.HALF_PAGE_UP:
+       elif request == Request.MOVE_HALF_PAGE_UP:
            view.pagedown()
 
-       elif request == Request.MOVE_TOP:
+       elif request == Request.MOVE_FIRST_LINE:
            view.top()
 
-       elif request == Request.MOVE_BOTTOM:
+       elif request == Request.MOVE_LAST_LINE:
            view.bottom()
 
-       elif request == Request.QUIT:
+       elif request in [Request.QUIT, Request.VIEW_CLOSE]:
            if view.prev_window is None:
                return True
            else:
                view = view.prev_window
                view.prev_window = None
 
-       elif request == Request.MAIN_VIEW:
+       elif request == Request.VIEW_MAIN:
            self.open(MainWindow)
 
-       elif request == Request.BODY_VIEW:
+       elif request == Request.VIEW_BODY:
            self.open(BodyWindow)
 
        else:

@@ -16,19 +16,34 @@ from pit.request import Request
 from pit.key_map import KeyMap
 
 key_maps = {
-        KeyMap('Enter',     Request.OPEN),
-        KeyMap('j',         Request.NEXT_LINE),
-        KeyMap('k',         Request.PREV_LINE),
-        KeyMap('C-n',       Request.PAGE_DOWN),
-        KeyMap('C-p',       Request.PAGE_UP),
-        KeyMap('C-f',       Request.HALF_PAGE_DOWN),
-        KeyMap('C-b',       Request.HALF_PAGE_UP),
-        KeyMap('g',         Request.MOVE_TOP),
-        KeyMap('G',         Request.MOVE_BOTTOM),
-        KeyMap('q',         Request.QUIT),
+        KeyMap('Enter',     Request.ENTER),
+        KeyMap('Lt',        Request.BACK),
+        KeyMap('C-n',       Request.NEXT),
+        KeyMap('Down',      Request.NEXT),
+        KeyMap('J',         Request.NEXT),
+        KeyMap('C-p',       Request.PREVIOUS),
+        KeyMap('Up',        Request.PREVIOUS),
+        KeyMap('K',         Request.PREVIOUS),
+        KeyMap(',',         Request.PARENT),
+        KeyMap('Tab',       Request.VIEW_NEXT),
+        KeyMap('R',         Request.REFRESH),
+        KeyMap('F5',        Request.REFRESH),
+        KeyMap('O',         Request.MAXIMIZE),
+        KeyMap('q',         Request.VIEW_CLOSE),
+        KeyMap('Q',         Request.QUIT),
+        KeyMap('C-C',       Request.QUIT),
 
-        KeyMap('m',         Request.MAIN_VIEW),
-        KeyMap('b',         Request.BODY_VIEW),
+        KeyMap('j',         Request.MOVE_DOWN),
+        KeyMap('k',         Request.MOVE_UP),
+        KeyMap('C-f',       Request.MOVE_PAGE_DOWN),
+        KeyMap('C-b',       Request.MOVE_PAGE_UP),
+        KeyMap('C-d',       Request.MOVE_HALF_PAGE_DOWN),
+        KeyMap('C-u',       Request.MOVE_HALF_PAGE_UP),
+        KeyMap('g',         Request.MOVE_FIRST_LINE),
+        KeyMap('G',         Request.MOVE_LAST_LINE),
+
+        KeyMap('m',         Request.VIEW_MAIN),
+        KeyMap('b',         Request.VIEW_BODY),
 }
 
 def get_request(key):
@@ -43,7 +58,7 @@ def main(stdscr):
     handler = WindowHandler(stdscr)
 
     key = 0
-    request = Request.MAIN_VIEW
+    request = Request.VIEW_MAIN
     while handler.view_driver(request) is None:
         height, width = stdscr.getmaxyx()
         handler.status_left('[{}]'.format(handler.current_window().name()))
