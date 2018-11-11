@@ -98,7 +98,13 @@ class GithubHandler:
         req = urllib.request.Request(queried_url, headers = {'Authorization': token(self.token)}, method = "GET")
         return urlopen(req)
 
+import feedparser
+class FeedHandler:
+    def __init__(self, url):
+        self.url = url
 
+    def request(self): 
+        return feedparser.parse(self.url)
 
 # handler = EsaHandler()
 # posts = handler.request('posts', {'q': "third_web", 'per_page': 100, 'sort': 'best_match'})

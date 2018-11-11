@@ -13,6 +13,7 @@ class BodyWindow(BaseWindow):
 
     def __init__(self, stdscr):
         super().__init__(stdscr)
+        self.pad = curses.newpad(1000, 400)
         self.pager = False
 
     def date_format(self, date):
@@ -39,7 +40,8 @@ class BodyWindow(BaseWindow):
         self.pad.addstr(1, offset_x, self.date_format(self.model['created']), curses.color_pair(2))
         self.pad.addstr(' ')
         self.pad.addstr(self.model['author_name'], curses.color_pair(5))
-        self.pad.addstr(2, offset_x, self.labels_format(self.model['labels']), curses.color_pair(3))
+        if self.model['labels'] is not None:
+            self.pad.addstr(2, offset_x, self.labels_format(self.model['labels']), curses.color_pair(3))
         lines = textwrap.dedent(self.model['body']).strip().splitlines()
         for i, line in enumerate(lines):
             self.pad.addstr(i + 4, offset_x, line, curses.color_pair(0))
