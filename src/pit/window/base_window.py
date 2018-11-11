@@ -18,7 +18,15 @@ class BaseWindow(ABC):
         self.model = FeedModel()
         self.prev_window = None
         self.pager = True
+        self.line_count = len(self.model.list())
         super().__init__()
+
+
+    def set_line_count(self, line_count):
+        self.line_count = line_count
+
+    def last(self):
+        return self.line_count - 1
 
     def clear(self):
         self.pad.erase()
@@ -50,21 +58,19 @@ class BaseWindow(ABC):
         # TODO: Calucurate 1
         display_height = height - 1
 
-        last = len(self.model.list()) - 1
-        self.cursor = min(self.cursor + display_height, last)
-        if self.offset + display_height < last:
+        self.cursor = min(self.cursor + display_height, self.last())
+        if self.offset + display_height < self.last():
             self.offset = self.cursor
 
     def scroll(self, lines=1):
         height, width = self.stdscr.getmaxyx()
         # TODO: Calucurate 2
         display_height = height - 2
-        last = len(self.model.list()) - 1
         if lines > 0:
-            self.cursor = min(self.cursor + lines, last)
+            self.cursor = min(self.cursor + lines, self.last())
             absolute_y = self.cursor - self.offset
             if absolute_y > display_height:
-                self.offset = min(self.offset + lines, last - display_height)
+                self.offset = min(self.offset + lines, self.last() - display_height)
         else:
             self.cursor = max(self.cursor + lines , 0)
             absolute_y = self.cursor - self.offset

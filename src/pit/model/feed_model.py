@@ -34,6 +34,7 @@ class FeedModel:
         item['status'] = None
         item['author_id'] = entry.author
         item['author_name'] = entry.author
+        item['link'] = entry.link
         item['category'] = None
         item['labels'] = None
         item['body'] = self.h.handle(entry.content[0].value)
@@ -49,6 +50,7 @@ class FeedModel:
         content['status'] = item['status']
         content['author_id'] = item['author_id']
         content['author_name'] = item['author_name']
+        content['link'] = item['link']
         content['category'] = item['category']
         content['labels'] = item['labels']
         content['body'] = item['body']

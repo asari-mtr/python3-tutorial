@@ -64,7 +64,8 @@ def main(stdscr):
             handler.status_left('[{}]'.format(current_window.name()))
         else:
             handler.status_left('[{} -> {}]'.format(type(current_window.prev_window), current_window.name()))
-        handler.status_right("{} ({}, {}) ({}, {})".format(hex(key), height, width, handler.current_window().offset, handler.current_window().cursor))
+        current = handler.current_window()
+        handler.status_right("{} ({}, {}) ({}, {}) {}".format(hex(key), height, width, current.offset, current.cursor, current.last()))
 
         handler.refresh()
         key = stdscr.getch()
