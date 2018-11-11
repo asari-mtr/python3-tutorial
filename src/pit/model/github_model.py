@@ -30,6 +30,7 @@ class GithubModel:
         item['status'] = issue['state']
         item['author_id'] = issue['user']['login']
         item['author_name'] = issue['user']['login']
+        item['link'] = issue['html_url']
         item['category'] = 'Issue'
         item['labels'] = [label['name'] for label in issue['labels']]
         item['body'] = issue['body']
@@ -46,6 +47,7 @@ class GithubModel:
         content['status'] = item['status']
         content['author_id'] = item['author_id']
         content['author_name'] = item['author_name']
+        content['link'] = item['link'] 
         content['category'] = item['category']
         content['labels'] = item['labels']
 
