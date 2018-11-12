@@ -21,7 +21,7 @@ class WindowHandler:
         self.stdscr = stdscr
         self.init_color()
         curses.curs_set(0)
-        self.update()
+        self.stdscr.clear()
         self.current_window_index = 0
         self.displayed = []
         self.views = {}
@@ -37,8 +37,13 @@ class WindowHandler:
             view.prev_window = self.current_window()
         self.displayed.append(view)
         self.change_window()
-        self.stdscr.refresh()
         self.refresh()
+
+    def update(self, window, model):
+        view = self.views[window.name]
+        view.set_model(model)
+        self.displayed = [view]
+        self.current_window_index = 0
 
     def current_window(self):
         if len(self.displayed) == 0 or self.current_window_index > len(self.displayed):
@@ -67,9 +72,6 @@ class WindowHandler:
             view.refresh()
         self.status_window.refresh()
         self.stdscr.refresh()
-
-    def update(self):
-        self.stdscr.clear()
 
     def init_color(self):
         curses.start_color()
@@ -117,12 +119,10 @@ class WindowHandler:
            self.open(MainWindow)
 
        elif request == Request.VIEW_FEED:
-           self.open(MainWindow)
-           self.current_window().model = FeedModel()
+           self.update(MainWindow, FeedModel())
 
        elif request == Request.VIEW_GITHUB:
-           self.open(MainWindow)
-           self.current_window().model = GithubModel()
+           self.update(MainWindow, GithubModel())
 
        elif view.pager:
            self.pager_driver(view, request)

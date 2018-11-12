@@ -64,7 +64,8 @@ def main(stdscr):
         height, width = stdscr.getmaxyx()
         current_window = handler.current_window()
 
-        handler.status_left('[{}]'.format(current_window.name()))
+        a = type(current_window.model)
+        handler.status_left('[{}][{}]'.format(a, current_window.name()))
 
         current = handler.current_window()
         handler.status_right("{} ({}, {}) ({}, {}) {} {}".format(hex(key), height, width, current.offset, current.cursor, current.last(), request.name))
