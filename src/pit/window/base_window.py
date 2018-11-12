@@ -15,12 +15,14 @@ class BaseWindow(ABC):
         self.pad.scrollok(True)
         self.cursor = 0
         self.offset = 0
-        self.model = FeedModel()
         self.prev_window = None
         self.pager = True
-        self.line_count = len(self.model.list())
+        self.set_model(GithubModel())
         super().__init__()
 
+    def set_model(self, model):
+        self.model = model
+        self.line_count = len(self.model.list())
 
     def set_line_count(self, line_count):
         self.line_count = line_count

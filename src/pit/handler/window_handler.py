@@ -9,8 +9,12 @@ from curses import panel
 sys.path.append('../../')
 
 from pit.window.main_window import MainWindow
+from pit.window.body_window import BodyWindow
 from pit.window.status_window import StatusWindow
 from pit.request import Request
+
+from pit.model.github_model import GithubModel
+from pit.model.feed_model import FeedModel
 
 class WindowHandler:
     def __init__(self, stdscr):
@@ -112,12 +116,16 @@ class WindowHandler:
        elif request == Request.VIEW_MAIN:
            self.open(MainWindow)
 
-       elif request == Request.VIEW_BODY:
-           self.open(BodyWindow)
+       elif request == Request.VIEW_FEED:
+           self.open(MainWindow)
+           self.current_window().model = FeedModel()
+
+       elif request == Request.VIEW_GITHUB:
+           self.open(MainWindow)
+           self.current_window().model = GithubModel()
 
        elif view.pager:
            self.pager_driver(view, request)
-
 
     def pager_driver(self, view, request):
        if request == Request.MOVE_DOWN:

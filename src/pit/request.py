@@ -28,3 +28,8 @@ class Request(IntEnum):
 
     VIEW_MAIN           = auto()
     VIEW_BODY           = auto()
+    VIEW_GITHUB         = auto()
+    VIEW_TWITTER        = auto()
+    VIEW_FEED           = auto()
+    VIEW_ESA            = auto()
+    VIEW_BACKLOG        = auto()

@@ -53,7 +53,7 @@ class BodyWindow(BaseWindow):
 
     def refresh(self):
         height, width = self.stdscr.getmaxyx()
-        self.pad.erase()
+        #self.pad.erase()
         display_width = int(width / 2) - 1
         offset_x = 1
         offset_y = 0

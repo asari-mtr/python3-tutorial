@@ -25,11 +25,10 @@ key_maps = {
         KeyMap(',',         Request.PARENT),
         KeyMap('Tab',       Request.VIEW_NEXT),
         KeyMap('R',         Request.REFRESH),
-        KeyMap('F5',        Request.REFRESH),
         KeyMap('O',         Request.MAXIMIZE),
         KeyMap('q',         Request.VIEW_CLOSE),
         KeyMap('Q',         Request.QUIT),
-        KeyMap('C-C',       Request.QUIT),
+        KeyMap('C-c',       Request.QUIT),
 
         KeyMap('j',         Request.MOVE_DOWN),
         KeyMap('k',         Request.MOVE_UP),
@@ -41,7 +40,11 @@ key_maps = {
         KeyMap('G',         Request.MOVE_LAST_LINE),
 
         KeyMap('m',         Request.VIEW_MAIN),
-        KeyMap('b',         Request.VIEW_BODY),
+        KeyMap('F1',        Request.VIEW_GITHUB),
+        KeyMap('F2',        Request.VIEW_TWITTER),
+        KeyMap('F3',        Request.VIEW_FEED),
+        KeyMap('F4',        Request.VIEW_BACKLOG),
+        KeyMap('F5',        Request.VIEW_ESA),
 }
 
 def get_request(key):
@@ -60,12 +63,11 @@ def main(stdscr):
     while handler.view_driver(request) is None:
         height, width = stdscr.getmaxyx()
         current_window = handler.current_window()
-        if current_window.prev_window is None:
-            handler.status_left('[{}]'.format(current_window.name()))
-        else:
-            handler.status_left('[{} -> {}]'.format(type(current_window.prev_window), current_window.name()))
+
+        handler.status_left('[{}]'.format(current_window.name()))
+
         current = handler.current_window()
-        handler.status_right("{} ({}, {}) ({}, {}) {}".format(hex(key), height, width, current.offset, current.cursor, current.last()))
+        handler.status_right("{} ({}, {}) ({}, {}) {} {}".format(hex(key), height, width, current.offset, current.cursor, current.last(), request.name))
 
         handler.refresh()
         key = stdscr.getch()
