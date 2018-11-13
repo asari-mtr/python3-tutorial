@@ -32,19 +32,19 @@ class MainWindow(BaseWindow):
         self.pad.erase()
         for (i, item) in enumerate(self.model.list()):
             if i != self.cursor:
-                created = self.date_format(item['created'])
+                created = self.date_format(item.created)
                 col = 0
                 self.pad.addstr(i, col, created, curses.color_pair(2))
                 col += len(created) + 1
-                self.pad.addstr(i, col, str(item['id']), curses.color_pair(3))
-                col += len(str(item['id'])) + 1
-                if item['status'] is not None:
-                    self.pad.addstr(i, col, item['status'], curses.color_pair(6))
-                    col += len(item['status']) + 1
-                self.pad.addstr(i, col, item['author_name'], curses.color_pair(5))
-                col += len(item['author_name']) + 1
-                self.pad.addstr(i, col, item['title'], curses.color_pair(0))
-                col += len(item['title']) + 1
+                self.pad.addstr(i, col, str(item.id), curses.color_pair(3))
+                col += len(str(item.id)) + 1
+                if item.status is not None:
+                    self.pad.addstr(i, col, item.status, curses.color_pair(6))
+                    col += len(item.status) + 1
+                self.pad.addstr(i, col, item.author_name, curses.color_pair(5))
+                col += len(item.author_name) + 1
+                self.pad.addstr(i, col, item.title, curses.color_pair(0))
+                col += len(item.title) + 1
             else:
                 attr = curses.color_pair(18)
                 self.pad.addstr(i, 0, self.format(item), attr)
@@ -59,9 +59,9 @@ class MainWindow(BaseWindow):
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
-        created = self.date_format(item['created'])
+        created = self.date_format(item.created)
         # TODO: Adjust padding
-        all_params = [created, item['id'], item['status'], item['author_name'], item['title']]
+        all_params = [created, item.id, item.status, item.author_name, item.title]
         params = [x for x in all_params if x is not None]
         count = len(params)
         format_string = '{} ' * count + ' ' * 200

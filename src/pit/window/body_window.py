@@ -25,8 +25,8 @@ class BodyWindow(BaseWindow):
         return " ".join(map(lambda label: "[{}]".format(label), labels))
 
     def open(self, handler):
-        if self.model['link'] is not None:
-            subprocess.call(['open', self.model['link']])
+        if self.model.link is not None:
+            subprocess.call(['open', self.model.link])
 
     def pageup(self):
         height, width = self.stdscr.getmaxyx()
@@ -62,24 +62,24 @@ class BodyWindow(BaseWindow):
         self.pad.vline(curses.ACS_VLINE, 10000)
         self.pad.attrset(curses.color_pair(0))
 
-        self.pad.addstr(offset_y, offset_x, "[{}]".format(self.model['status']), curses.color_pair(6))
+        self.pad.addstr(offset_y, offset_x, "[{}]".format(self.model.status), curses.color_pair(6))
         self.pad.addstr(' ')
-        self.pad.addstr('{}/'.format(self.model['category']), curses.color_pair(0))
-        self.pad.addstr(self.model['title'], curses.color_pair(0))
+        self.pad.addstr('{}/'.format(self.model.category), curses.color_pair(0))
+        self.pad.addstr(self.model.title, curses.color_pair(0))
         offset_y += 1
 
-        self.pad.addstr(offset_y, offset_x, self.date_format(self.model['created']), curses.color_pair(2))
+        self.pad.addstr(offset_y, offset_x, self.date_format(self.model.created), curses.color_pair(2))
         self.pad.addstr(' ')
-        self.pad.addstr(self.model['author_name'], curses.color_pair(5))
+        self.pad.addstr(self.model.author_name, curses.color_pair(5))
         offset_y += 1
 
-        if self.model['labels'] is not None:
-            self.pad.addstr(offset_y, offset_x, self.labels_format(self.model['labels']), curses.color_pair(3))
+        if self.model.labels is not None:
+            self.pad.addstr(offset_y, offset_x, self.labels_format(self.model.labels), curses.color_pair(3))
             offset_y += 1
 
         offset_y += 1
 
-        lines = textwrap.dedent(self.model['body']).strip().splitlines()
+        lines = textwrap.dedent(self.model.body).strip().splitlines()
         for i, line in enumerate(lines):
             length = len(line)
             ps = [ line[j:min(j+display_width - 2, length)]  for j in range(0, length, display_width - 2)]
