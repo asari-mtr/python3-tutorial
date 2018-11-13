@@ -61,7 +61,11 @@ class MainWindow(BaseWindow):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
         created = self.date_format(item['created'])
         # TODO: Adjust padding
-        return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
+        if item['status']:
+            return "{} {} {} {} {}{}".format(created, item['id'], item['status'], item['author_name'], item['title'], ' ' * 200)
+        else:
+            return "{} {} {} {}{}".format(created, item['id'],  item['author_name'], item['title'], ' ' * 200)
+
 
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
