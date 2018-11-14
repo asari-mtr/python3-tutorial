@@ -15,6 +15,7 @@ from pit.request import Request
 
 from pit.model.github_model import GithubModel
 from pit.model.feed_model import FeedModel
+from pit.model.esa_model import EsaModel
 
 class WindowHandler:
     def __init__(self, stdscr):
@@ -123,6 +124,9 @@ class WindowHandler:
 
        elif request == Request.VIEW_GITHUB:
            self.update(MainWindow, GithubModel())
+
+       elif request == Request.VIEW_ESA:
+           self.update(MainWindow, EsaModel())
 
        elif view.pager:
            self.pager_driver(view, request)
