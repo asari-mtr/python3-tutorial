@@ -5,8 +5,7 @@ import curses
 class StatusWindow:
     def __init__(self, scr):
         self.scr = scr
-        height, width = scr.getmaxyx()
-        self.window = scr.subwin(height - 1, 0)
+        self.window = scr.subwin(self.get_height(), 0)
 
     def write_left(self, message, attr=0):
         self.window.addstr(0, 0, message, attr)
@@ -20,8 +19,11 @@ class StatusWindow:
         self.window.erase()
 
     def refresh(self):
-        height, width = self.scr.getmaxyx()
-        self.window.mvwin(height - 1, 0)
+        self.window.mvwin(self.get_height(), 0)
         # TODO: Move attribute
         self.window.bkgd(" ", curses.color_pair(22))
         self.window.refresh()
+
+    def get_height(self):
+        h, _w = self.scr.getmaxyx()
+        return h - 1
