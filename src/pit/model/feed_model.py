@@ -12,6 +12,9 @@ from pit.items import Item, Content, Comment
 from backlog import FeedHandler
 
 class FeedModel:
+    def name():
+        return "feed"
+
     def __init__(self):
         url = "https://qiita.com/tags/Python/feed"
         self.handler = FeedHandler(url)

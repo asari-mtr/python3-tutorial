@@ -11,6 +11,9 @@ from pit.items import Item, Content, Comment
 from backlog import GithubHandler
 
 class GithubModel:
+    def name():
+        return "github"
+
     def __init__(self):
         self.handler = GithubHandler("asari-mtr/study-record")
         self.items = None

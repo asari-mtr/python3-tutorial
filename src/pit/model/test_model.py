@@ -9,6 +9,9 @@ sys.path.append('../../')
 from pit.items import Item, Content, Comment
 
 class TestModel:
+    def name():
+        return "test"
+
     def __init__(self):
         pass
 

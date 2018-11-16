@@ -11,6 +11,9 @@ from pit.items import Item, Content, Comment
 from backlog import EsaHandler
 
 class EsaModel:
+    def name():
+        return "esa"
+
     def __init__(self):
         self.handler = EsaHandler()
         self.items = None
