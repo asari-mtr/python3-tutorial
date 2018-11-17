@@ -45,18 +45,5 @@ class FeedModel:
         return item
 
     def content(self, item: Item) -> Content:
-        content = Content()
-        content.id = item.id
-        content.title = item.title
-        content.created = item.created
-        content.updated = item.updated
-        content.status = item.status
-        content.author_id = item.author_id
-        content.author_name = item.author_name
-        content.link = item.link
-        content.category = item.category
-        content.labels = item.labels
-        content.body = item.body
-
-        return content
+        return Content(item)
 

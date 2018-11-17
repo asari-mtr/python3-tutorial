@@ -32,19 +32,19 @@ class MainWindow(BaseWindow):
         self.pad.erase()
         for (i, item) in enumerate(self.model.list()):
             if i != self.cursor:
-                created = self.date_format(item.created)
-                col = 0
-                self.pad.addstr(i, col, created, curses.color_pair(2))
-                col += len(created) + 1
-                self.pad.addstr(i, col, str(item.id), curses.color_pair(3))
-                col += len(str(item.id)) + 1
+                self.col = 0
+                self.pad.move(i, self.col)
+
+                self.write_text(self.date_format(item.created), curses.color_pair(2))
+                self.write_space()
+                self.write_text(str(item.id), curses.color_pair(3))
+                self.write_space()
                 if item.status is not None:
-                    self.pad.addstr(i, col, item.status, curses.color_pair(6))
-                    col += len(item.status) + 1
-                self.pad.addstr(i, col, item.author_name, curses.color_pair(5))
-                col += len(item.author_name) + 1
-                self.pad.addstr(i, col, item.title, curses.color_pair(0))
-                col += len(item.title) + 1
+                    self.write_text(item.status, curses.color_pair(6))
+                    self.write_space()
+                self.write_text(item.author_name, curses.color_pair(5))
+                self.write_space()
+                self.write_text(item.title, curses.color_pair(0))
             else:
                 attr = curses.color_pair(18)
                 self.pad.addstr(i, 0, self.format(item), attr)
@@ -66,6 +66,15 @@ class MainWindow(BaseWindow):
         count = len(params)
         format_string = '{} ' * count + ' ' * 200
         return format_string.format(*params)
+
+    def write_text(self, text, attr):
+        self.pad.addstr(text, attr)
+        self.col += len(text)
+
+    def write_space(self, size=1):
+        self.pad.addstr(' ' * size)
+        self.col += size
+
 
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")

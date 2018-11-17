@@ -42,20 +42,7 @@ class EsaModel:
         return item
 
     def content(self, item: Item) -> Content:
-        content = Content()
-        content.id = item.id
-        content.title = item.title
-        content.body = item.body
-        content.created = item.created
-        content.updated = item.updated
-        content.status = item.status
-        content.author_id = item.author_id
-        content.author_name = item.author_name
-        content.link = item.link
-        content.category = item.category
-        content.labels = item.labels
-
-        return content
+        return Content(item)
 
     def comment(self, item: Item) -> List[Comment]:
         return [self.create_comment(i) for i in range(1, 20)]

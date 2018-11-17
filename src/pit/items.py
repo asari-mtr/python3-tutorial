@@ -22,19 +22,19 @@ class Item(AttrDict):
         self.labels = []
 
 class Content(AttrDict):
-    def __init__(self):
-        self.id = None
-        self.title = None
-        self.body = None
-        self.created = None
-        self.updated = None
-        self.status = None
-        self.author_id = None
-        self.author_name = None
-        self.category = None
-        self.link = None
-        self.body = None
-        self.labels = []
+    def __init__(self, item=Item()):
+        self.id = item.id
+        self.title = item.title
+        self.body = item.body
+        self.created = item.created
+        self.updated = item.updated
+        self.status = item.status
+        self.author_id = item.author_id
+        self.author_name = item.author_name
+        self.link = item.link
+        self.category = item.category
+        self.labels = item.labels
+        self.body = item.body
 
 class Comment(AttrDict):
     pass

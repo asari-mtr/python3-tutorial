@@ -18,6 +18,7 @@ class BaseWindow(ABC):
         self.prev_window = None
         self.pager = True
         self.set_model(GithubModel())
+        self.col = 0                    # Column when drawing
         super().__init__()
 
     def set_model(self, model):
