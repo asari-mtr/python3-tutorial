@@ -55,45 +55,47 @@ class BodyWindow(BaseWindow):
         height, width = self.stdscr.getmaxyx()
         #self.pad.erase()
         display_width = int(width / 2) - 1
-        offset_x = 1
-        offset_y = 0
+        self.col = 1
+        self.row = 0
+        self.pad.move(0, 1)
 
-        self.pad.addstr(offset_y, offset_x, "[{}]".format(self.model.status), curses.color_pair(6))
-        self.pad.addstr(' ')
-        self.pad.addstr('{}/'.format(self.model.category), curses.color_pair(0))
-        self.pad.addstr(self.model.title, curses.color_pair(0))
-        offset_y += 1
+        self.write_text("[{}]".format(self.model.status), curses.color_pair(6))
+        self.write_space()
+        self.write_text('{}/'.format(self.model.category), curses.color_pair(0))
+        self.write_textn(self.model.title, curses.color_pair(0))
 
-        self.pad.addstr(offset_y, offset_x, self.date_format(self.model.created), curses.color_pair(2))
-        self.pad.addstr(' ')
-        self.pad.addstr(self.model.author_name, curses.color_pair(5))
-        offset_y += 1
+        self.write_space()
+        self.write_text(self.date_format(self.model.created), curses.color_pair(2))
+        self.write_space()
+        self.write_textn(self.model.author_name, curses.color_pair(5))
 
         if self.model.labels is not None:
-            self.pad.addstr(offset_y, offset_x, self.labels_format(self.model.labels), curses.color_pair(3))
-            offset_y += 1
+            self.write_space()
+            self.write_textn(self.labels_format(self.model.labels), curses.color_pair(3))
 
-        offset_y += 1
+        self.write_textn()
 
         lines = textwrap.dedent(self.model.body).strip().splitlines()
         for i, line in enumerate(lines):
             length = len(line)
             ps = [ line[j:min(j+display_width - 2, length)]  for j in range(0, length, display_width - 2)]
             for p in ps:
-                self.pad.addstr(offset_y, offset_x, p, curses.color_pair(0))
-                offset_y += 1
+                self.write_space()
+                self.write_textn(p, curses.color_pair(0))
 
-        self.pad.addstr(offset_y, offset_x + 1, '-' * display_width, curses.color_pair(0))
-        offset_y += 2
+        self.write_space()
+        self.write_textn()
+        self.write_textn('-' * display_width, curses.color_pair(0))
+        self.write_textn()
 
-        self.set_line_count(offset_y + 1)
+        self.set_line_count(self.row + 1)
 
         if self.offset > self.last():
             self.offset = 0
 
         self.pad.attrset(curses.color_pair(20))
         self.pad.move(0, 0)
-        self.pad.vline(curses.ACS_VLINE, offset_y + height)
+        self.pad.vline(curses.ACS_VLINE, self.row + height)
         self.pad.attrset(curses.color_pair(0))
 
         # TODO: Calucurate 2

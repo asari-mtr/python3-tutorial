@@ -19,6 +19,7 @@ class BaseWindow(ABC):
         self.pager = True
         self.set_model(GithubModel())
         self.col = 0                    # Column when drawing
+        self.row = 0                    # Row when drawing
         super().__init__()
 
     def set_model(self, model):
@@ -83,6 +84,13 @@ class BaseWindow(ABC):
     def write_text(self, text, attr):
         self.pad.addstr(text, attr)
         self.col += len(text)
+
+    def write_textn(self, text=None, attr=None):
+        if text is not None:
+            self.pad.addstr(text, attr)
+        self.col = 0
+        self.row += 1
+        self.pad.move(self.row, self.col)
 
     def write_space(self, size=1):
         self.pad.addstr(' ' * size)
