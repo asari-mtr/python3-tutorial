@@ -58,10 +58,6 @@ class BodyWindow(BaseWindow):
         offset_x = 1
         offset_y = 0
 
-        self.pad.attrset(curses.color_pair(20))
-        self.pad.vline(curses.ACS_VLINE, 10000)
-        self.pad.attrset(curses.color_pair(0))
-
         self.pad.addstr(offset_y, offset_x, "[{}]".format(self.model.status), curses.color_pair(6))
         self.pad.addstr(' ')
         self.pad.addstr('{}/'.format(self.model.category), curses.color_pair(0))
@@ -94,6 +90,11 @@ class BodyWindow(BaseWindow):
 
         if self.offset > self.last():
             self.offset = 0
+
+        self.pad.attrset(curses.color_pair(20))
+        self.pad.move(0, 0)
+        self.pad.vline(curses.ACS_VLINE, offset_y + height)
+        self.pad.attrset(curses.color_pair(0))
 
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, display_width, height - 2, width - 1)

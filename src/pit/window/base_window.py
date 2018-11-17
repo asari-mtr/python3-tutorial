@@ -80,3 +80,10 @@ class BaseWindow(ABC):
             if 0 > absolute_y :
                 self.offset = max(self.offset + lines, 0)
 
+    def write_text(self, text, attr):
+        self.pad.addstr(text, attr)
+        self.col += len(text)
+
+    def write_space(self, size=1):
+        self.pad.addstr(' ' * size)
+        self.col += size

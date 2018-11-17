@@ -67,15 +67,6 @@ class MainWindow(BaseWindow):
         format_string = '{} ' * count + ' ' * 200
         return format_string.format(*params)
 
-    def write_text(self, text, attr):
-        self.pad.addstr(text, attr)
-        self.col += len(text)
-
-    def write_space(self, size=1):
-        self.pad.addstr(' ' * size)
-        self.col += size
-
-
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
 
