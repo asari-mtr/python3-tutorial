@@ -35,16 +35,12 @@ class MainWindow(BaseWindow):
                 self.col = 0
                 self.pad.move(i, self.col)
 
-                self.write_text(self.date_format(item.created), curses.color_pair(2))
-                self.write_space()
-                self.write_text(str(item.id), curses.color_pair(3))
-                self.write_space()
-                if item.status is not None:
-                    self.write_text(item.status, curses.color_pair(6))
-                    self.write_space()
-                self.write_text(item.author_name, curses.color_pair(5))
-                self.write_space()
-                self.write_text(item.title, curses.color_pair(0))
+                for key in self.define_view():
+                    text, attr = self.get_item(item, key)
+                    if item.status is not None:
+                        self.write_text(text, curses.color_pair(attr))
+                        self.write_space()
+
             else:
                 attr = curses.color_pair(18)
                 self.pad.addstr(i, 0, self.format(item), attr)
