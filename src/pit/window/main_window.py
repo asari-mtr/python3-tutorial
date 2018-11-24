@@ -12,6 +12,49 @@ from pit.window.base_window import BaseWindow
 from pit.window.body_window import BodyWindow
 
 from pit.items import Item
+from enum import IntEnum, auto
+
+class ItemType(IntEnum):
+    NONE                = auto()
+    ID                  = auto()
+    TITLE               = auto()
+    CREATED             = auto()
+    UPDATED             = auto()
+    STATUS              = auto()
+    AUTHOR_ID           = auto()
+    AUTHOR_NAME         = auto()
+    CATEGORY            = auto()
+    LINK                = auto()
+    BODY                = auto()
+    LABELS              = auto()
+
+item_map = {
+    "id":                       ItemType.ID,
+    "title":                    ItemType.TITLE,
+    "created":                  ItemType.CREATED,
+    "updated":                  ItemType.UPDATED,
+    "status":                   ItemType.STATUS,
+    "author_id":                ItemType.AUTHOR_ID,
+    "author_name":              ItemType.AUTHOR_NAME,
+    "category":                 ItemType.CATEGORY,
+    "link":                     ItemType.LINK,
+    "body":                     ItemType.BODY,
+    "labels":                   ItemType.LABELS,
+}
+
+item_style_map = {
+    ItemType.ID                  : 3,
+    ItemType.TITLE               : 0,
+    ItemType.CREATED             : 2,
+    ItemType.UPDATED             : 2,
+    ItemType.STATUS              : 6,
+    ItemType.AUTHOR_ID           : 5,
+    ItemType.AUTHOR_NAME         : 5,
+    ItemType.CATEGORY            : 0,
+    ItemType.LINK                : 3,
+    ItemType.BODY                : 0,
+    ItemType.LABELS              : 3,
+}
 
 class MainWindow(BaseWindow):
     """
@@ -37,7 +80,7 @@ class MainWindow(BaseWindow):
 
                 for key in self.define_view():
                     text, attr = self.get_item(item, key)
-                    if item.status is not None:
+                    if text is not None:
                         self.write_text(text, curses.color_pair(attr))
                         self.write_space()
 
@@ -66,3 +109,24 @@ class MainWindow(BaseWindow):
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
 
+    def define_view(self):
+        return ["created", "id", "status", "author_name", "title"]
+
+    def get_item(self,item,  key):
+        text = None
+        if key in ("created"):
+            text = self.date_format(item.created)
+        elif key in ("id"):
+            text = str(item.id)
+        elif key in ("status"):
+            text = item.status
+        elif key in ("author_name"):
+            text = item.author_name
+        elif key in ("title"):
+            text = item.title
+
+        attr = None
+        if key in item_map.keys():
+            attr = item_style_map[item_map[key]]
+
+        return text, attr
