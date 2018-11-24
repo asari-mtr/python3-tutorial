@@ -18,6 +18,9 @@ class GithubModel:
         self.handler = GithubHandler("asari-mtr/study-record")
         self.items = None
 
+    def define_view(self):
+        return ["created", "id", "status", "author_name", "title"]
+
     def list(self) -> List[Item]:
         if self.items is None:
             self.items = [self.create_item(issue) for issue in self.handler.request('issues')]

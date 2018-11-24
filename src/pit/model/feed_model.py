@@ -22,6 +22,9 @@ class FeedModel:
         self.h = html2text.HTML2Text()
         self.h.ignore_links = True
 
+    def define_view(self):
+        return ["created", "status", "author_name", "title"]
+
     def list(self) -> List[Item]:
         if self.items is None:
             self.items = [self.create_item(entry) for entry in self.handler.request().entries]

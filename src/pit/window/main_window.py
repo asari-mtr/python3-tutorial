@@ -78,7 +78,7 @@ class MainWindow(BaseWindow):
                 self.col = 0
                 self.pad.move(i, self.col)
 
-                for key in self.define_view():
+                for key in self.model.define_view():
                     text, attr = self.get_item(item, key)
                     if text is not None:
                         self.write_text(text, curses.color_pair(attr))
@@ -108,9 +108,6 @@ class MainWindow(BaseWindow):
 
     def date_format(self, date):
         return dateutil.parser.parse(date).strftime("%Y-%m-%d %H:%M %z")
-
-    def define_view(self):
-        return ["created", "id", "status", "author_name", "title"]
 
     def get_item(self,item,  key):
         text = None
