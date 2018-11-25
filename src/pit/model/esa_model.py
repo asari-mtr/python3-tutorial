@@ -18,6 +18,9 @@ class EsaModel:
         self.handler = EsaHandler()
         self.items = None
 
+    def define_view(self):
+        return ["created", "id", "status", "author_name", "title"]
+
     def list(self) -> List[Item]:
         if self.items is None:
             response = self.handler.request('posts', {'per_page': 100, 'sort': 'created'})
