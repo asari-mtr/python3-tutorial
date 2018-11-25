@@ -92,6 +92,9 @@ class BaseWindow(ABC):
         self.row += 1
         self.pad.move(self.row, self.col)
 
-    def write_space(self, size=1):
-        self.pad.addstr(' ' * size)
+    def write_space(self, size=1, attr=None):
+        if attr is None:
+            self.pad.addstr(' ' * size)
+        else:
+            self.pad.addstr(' ' * size, attr)
         self.col += size

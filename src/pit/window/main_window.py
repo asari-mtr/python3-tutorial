@@ -74,19 +74,23 @@ class MainWindow(BaseWindow):
         height, width = self.stdscr.getmaxyx()
         self.pad.erase()
         for (i, item) in enumerate(self.model.list()):
-            if i != self.cursor:
-                self.col = 0
-                self.pad.move(i, self.col)
+            self.col = 0
+            self.pad.move(i, self.col)
 
-                for key in self.model.define_view():
-                    text, attr = self.get_item(item, key)
-                    if text is not None:
-                        self.write_text(text, curses.color_pair(attr))
-                        self.write_space()
-
+            if i == self.cursor:
+                default_attr = curses.color_pair(18)
             else:
-                attr = curses.color_pair(18)
-                self.pad.addstr(i, 0, self.format(item), attr)
+                default_attr = None
+
+            for key in self.model.define_view():
+                text, attr = self.get_item(item, key)
+                attr = curses.color_pair(attr)
+                if text is not None:
+                    self.write_text(text, default_attr or attr)
+                    self.write_space(attr=default_attr)
+
+            self.write_space(size=width - self.col, attr=default_attr or attr)
+
         # TODO: Calucurate 2
         self.pad.refresh(self.offset, 0, 0, 0, height - 2, width - 1)
 
