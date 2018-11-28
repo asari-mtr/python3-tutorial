@@ -67,8 +67,8 @@ class BodyWindow(BaseWindow):
         return " ".join(map(lambda label: "[{}]".format(label), labels))
 
     def open(self, handler):
-        if self.model.link is not None:
-            subprocess.call(['open', self.model.link])
+        if self.select_item().link is not None:
+            subprocess.call(['open', self.select_item().link])
 
     def pageup(self):
         height, width = self.stdscr.getmaxyx()
@@ -101,23 +101,24 @@ class BodyWindow(BaseWindow):
         self.row = 0
         self.pad.move(0, 1)
 
-        self.write_text("[{}]".format(self.model.status), curses.color_pair(6))
+        item = self.model.select_item()
+        self.write_text("[{}]".format(item.status), curses.color_pair(6))
         self.write_space()
-        self.write_text('{}/'.format(self.model.category), curses.color_pair(0))
-        self.write_textn(self.model.title, curses.color_pair(0))
+        self.write_text('{}/'.format(item.category), curses.color_pair(0))
+        self.write_textn(item.title, curses.color_pair(0))
 
         self.write_space()
-        self.write_text(self.date_format(self.model.created), curses.color_pair(2))
+        self.write_text(self.date_format(item.created), curses.color_pair(2))
         self.write_space()
-        self.write_textn(self.model.author_name, curses.color_pair(5))
+        self.write_textn(item.author_name, curses.color_pair(5))
 
-        if self.model.labels is not None:
+        if item.labels is not None:
             self.write_space()
-            self.write_textn(self.labels_format(self.model.labels), curses.color_pair(3))
+            self.write_textn(self.labels_format(item.labels), curses.color_pair(3))
 
         self.write_textn()
 
-        lines = textwrap.dedent(self.model.body).strip().splitlines()
+        lines = textwrap.dedent(item.body).strip().splitlines()
         for i, line in enumerate(lines):
             length = len(line)
             ps = [ line[j:min(j+display_width - 2, length)]  for j in range(0, length, display_width - 2)]
@@ -130,11 +131,15 @@ class BodyWindow(BaseWindow):
         self.write_textn('-' * display_width, curses.color_pair(0))
         self.write_textn()
 
+        comment_list = self.model.comment(item)
+        self.write_textn(comment_list[0]['content'], curses.color_pair(0))
+
         self.set_line_count(self.row + 1)
 
         if self.offset > self.last():
             self.offset = 0
 
+        # vline
         self.pad.attrset(curses.color_pair(20))
         self.pad.move(0, 0)
         self.pad.vline(curses.ACS_VLINE, self.row + height)

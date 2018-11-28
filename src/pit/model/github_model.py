@@ -17,6 +17,10 @@ class GithubModel:
     def __init__(self):
         self.handler = GithubHandler("asari-mtr/study-record")
         self.items = None
+        self.select = 0
+
+    def select_item(self):
+        return self.items[self.select]
 
     def define_view(self):
         return ["created", "id", "status", "author_name", "title"]

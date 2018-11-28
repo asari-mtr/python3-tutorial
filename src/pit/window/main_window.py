@@ -95,10 +95,8 @@ class MainWindow(BaseWindow):
         self.pad.refresh(self.offset, 0, 0, 0, height - 2, width - 1)
 
     def open(self, handler):
-        handler.open(BodyWindow, self.select_item())
-
-    def select_item(self):
-        return self.model.content(self.model.list()[self.cursor])
+        self.model.select = self.cursor
+        handler.open(BodyWindow, self.model)
 
     def format(self, item):
         # return "{} {} {} {}".format(item.id, item.status, item.author_name, item.title)
