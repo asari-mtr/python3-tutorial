@@ -129,10 +129,15 @@ class BodyWindow(BaseWindow):
         self.write_space()
         self.write_textn()
         self.write_textn('-' * display_width, curses.color_pair(0))
-        self.write_textn()
 
-        comment_list = self.model.comment(item)
-        self.write_textn(comment_list[0]['content'], curses.color_pair(0))
+        comments = self.model.comment(item)
+        for comment in comments:
+            self.write_space()
+            self.write_textn("{} {}".format(comment['author_name'], comment['created']), curses.color_pair(0))
+            self.write_space()
+            self.write_textn(comment['content'], curses.color_pair(0))
+            self.write_textn()
+            self.write_textn('-' * display_width, curses.color_pair(0))
 
         self.set_line_count(self.row + 1)
 
