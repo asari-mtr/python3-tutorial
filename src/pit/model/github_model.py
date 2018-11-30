@@ -51,15 +51,18 @@ class GithubModel:
         return Content(item)
 
     def comment(self, item: Item) -> List[Comment]:
-        return [self.create_comment(i) for i in range(1, 20)]
+        if self.comments is None:
+            self.comments = [self.create_comment(comment) for comment in self.handler.request("issues/{}/comments".format(item.id))]
+
+        return self.comments
 
     def create_comment(self, i):
          comment = Comment()
-         comment['id'] = i
-         comment['content'] = "Comment {}".format(i)
-         comment['created'] = "2012-07-23T06:10:15Z"
-         comment['updated'] = "2012-07-23T06:10:15Z"
-         comment['author_id'] = 1234
-         comment['author_name'] = "Test user"
+         comment['id'] = i['id']
+         comment['content'] = i['body']
+         comment['created'] = i['created_at']
+         comment['updated'] = i['updated_at']
+         comment['author_id'] = i['user']['id']
+         comment['author_name'] = i['user']['login']
 
          return comment

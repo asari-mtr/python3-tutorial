@@ -7,6 +7,7 @@ from pit.items import Item
 
 import textwrap
 from pit.window.base_window import BaseWindow
+from enum import IntEnum, auto
 
 class ItemType(IntEnum):
     NONE                = auto()
